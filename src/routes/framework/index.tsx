@@ -1,54 +1,111 @@
-import React from 'react';
-import { Layout, Card } from '@tencent/tea-component';
-import { Router, Route, Switch, Link, useParams } from 'react-router-dom';
-import { useHistory } from '@tea/app';
+import TableCommon from '@src/components/tableCommon';
+import { DBTableName } from '@src/services';
+import { Button, Card, Input, Justify, Layout, message, Table } from '@tencent/tea-component';
+import React, { useEffect, useState } from 'react';
+import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
 
-function UserDetail() {
-  const { name } = useParams<{ name: string }>();
-  const history = useHistory();
+type RecordType = {
+  id?: number;
+  businessId?: string;
+  businessName?: string;
+  part?: string;
+  businessKinds?: string;
+  process?: string;
+  dataProcess?: string;
+  addMen?: string;
+  createdAt?: string | number;
+};
 
-  return (
-    <Content>
-      <Content.Header title="Users" showBackButton />
-      <Content.Body>
-        <Card>
-          <Card.Body>{name}</Card.Body>
-        </Card>
-      </Content.Body>
-    </Content>
-  );
-}
+const BusinessPage: React.FC = () => {
+  const [dataList, setDataList] = useState<RecordType[]>();
+  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.project);
 
-function UserOverview() {
-  return (
-    <Content>
-      <Content.Header title="Users" />
-      <Content.Body>
-        <Card>
-          <Card.Body>
-            <Link to="/gap/alice">Alice</Link>
-            <br />
-            <Link to="/gap/bob">Bob</Link>
-          </Card.Body>
-        </Card>
-      </Content.Body>
-    </Content>
-  );
-}
+  const [text, setText] = useState('');
 
-const GapPage: React.FC = () => {
-  const history = useHistory();
+  // 拉取数据
+  const fetchList = () => {
+    getAll()
+      .then(data => {
+        console.log(data, 123);
+        setDataList(data);
+      })
+      .catch(() => {});
+  };
+
+  // 首次打开页面加载 第二个参数需要是空数组保证只加载一次
+  useEffect(() => {
+    fetchList();
+  }, []);
+
+  // 点击添加按钮
+  const onAdd = () => {
+    add<RecordType>({
+      businessId: 'businessId123',
+      businessName: 'businessName123',
+      part: '11',
+      businessKinds: 'businessKinds123',
+      process: '查看',
+      dataProcess: '查看',
+      addMen: 'addMen111',
+      createdAt: +new Date(),
+    })
+      .then(() => {
+        message.success({ content: '成功' });
+        fetchList();
+      })
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
+  };
+  const handleProcess = data => {
+    console.log(111, data);
+  };
+  const handleDataProcess = data => {
+    console.log(222, data);
+  };
+
+  const config = {
+    db: 'data',
+    columns: ['systemConId', 'configurationName', 'connectArea', 'conSystem', 'conSystem', 'addMen', 'createdAt'],
+  };
   return (
     <Body>
-      <Router history={history}>
-        <Switch>
-          <Route exact path="/gap" component={UserOverview} />
-          <Route path="/gap/:name" component={UserDetail} />
-        </Switch>
-      </Router>
+      <Content>
+        <Content.Header title="系统架构"></Content.Header>
+        <Content.Body>
+          <Card>
+            <Card.Body>
+              <Table.ActionPanel>
+                <Justify
+                  left={
+                    <>
+                      <Input
+                        value={text}
+                        onChange={(value, context) => {
+                          setText(value);
+                          console.log(value, context);
+                        }}
+                        placeholder="请输入业务名称"
+                      />
+                    </>
+                  }
+                  right={
+                    <>
+                      <Button type="primary" onClick={onAdd}>
+                        新增业务
+                      </Button>
+                    </>
+                  }
+                />
+              </Table.ActionPanel>
+              <TableCommon {...config}></TableCommon>
+            </Card.Body>
+          </Card>
+        </Content.Body>
+      </Content>
     </Body>
   );
 };
 
-export default GapPage;
+export default BusinessPage;

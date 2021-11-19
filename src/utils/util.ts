@@ -33,3 +33,60 @@ export const isNumber = (str: any) => {
   }
   return true;
 };
+
+export const tableColumns = (columns: any) => {
+  const allColumns = [
+    {
+      key: 'businessId',
+      header: '业务ID',
+    },
+    {
+      key: 'businessName',
+      header: '业务名称',
+    },
+    {
+      key: 'part',
+      header: '所属部门',
+    },
+    {
+      key: 'businessKinds',
+      header: '业务分类',
+    },
+    {
+      key: 'systemConId',
+      header: '系统架构ID',
+    },
+    {
+      key: 'configurationName',
+      header: '架构名称',
+    },
+    {
+      key: 'connectArea',
+      header: '相关分区',
+    },
+    {
+      key: 'conSystem',
+      header: '相关系统',
+    },
+    {
+      key: 'conSystem',
+      header: '架构图',
+    },
+    {
+      key: 'addMen',
+      header: '添加人',
+    },
+    {
+      key: 'createdAt',
+      header: '添加时间',
+    },
+  ];
+  let arr = [];
+  allColumns.map(item => {
+    if (columns.indexOf(item.key) > -1) {
+      arr.push(item);
+    }
+  });
+  console.log(999, arr);
+  return arr;
+};

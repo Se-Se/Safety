@@ -1,14 +1,19 @@
 import { DBTableName } from '@src/services';
 import { formatDate } from '@src/utils/util';
-import { Button, Card, Justify, Layout, message, Table } from '@tencent/tea-component';
+import { Button, Card, Input, Justify, Layout, message, Table } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
 
 type RecordType = {
   id?: number;
-  name?: string;
-  type?: string;
+  businessId?: string;
+  businessName?: string;
+  part?: string;
+  businessKinds?: string;
+  process?: string;
+  dataProcess?: string;
+  addMen?: string;
   createdAt?: string | number;
 };
 
@@ -16,10 +21,13 @@ const BusinessPage: React.FC = () => {
   const [dataList, setDataList] = useState<RecordType[]>();
   const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.project);
 
+  const [text, setText] = useState('');
+
   // 拉取数据
   const fetchList = () => {
     getAll()
       .then(data => {
+        console.log(data, 123);
         setDataList(data);
       })
       .catch(() => {});
@@ -32,7 +40,16 @@ const BusinessPage: React.FC = () => {
 
   // 点击添加按钮
   const onAdd = () => {
-    add<RecordType>({ name: 'xxxx', type: 'x', createdAt: +new Date() })
+    add<RecordType>({
+      businessId: 'businessId123',
+      businessName: 'businessName123',
+      part: '11',
+      businessKinds: 'businessKinds123',
+      process: '查看',
+      dataProcess: '查看',
+      addMen: 'addMen111',
+      createdAt: +new Date(),
+    })
       .then(() => {
         message.success({ content: '成功' });
         fetchList();
@@ -41,7 +58,12 @@ const BusinessPage: React.FC = () => {
         message.error({ content: `失败${err}` });
       });
   };
-
+  const handleProcess = data => {
+    console.log(111, data);
+  };
+  const handleDataProcess = data => {
+    console.log(222, data);
+  };
   return (
     <Body>
       <Content>
@@ -52,9 +74,23 @@ const BusinessPage: React.FC = () => {
               <Table.ActionPanel>
                 <Justify
                   left={
-                    <Button type="primary" onClick={onAdd}>
-                      新增
-                    </Button>
+                    <>
+                      <Input
+                        value={text}
+                        onChange={(value, context) => {
+                          setText(value);
+                          console.log(value, context);
+                        }}
+                        placeholder="请输入业务名称"
+                      />
+                    </>
+                  }
+                  right={
+                    <>
+                      <Button type="primary" onClick={onAdd}>
+                        新增业务
+                      </Button>
+                    </>
                   }
                 />
               </Table.ActionPanel>
@@ -65,20 +101,62 @@ const BusinessPage: React.FC = () => {
                 bordered
                 columns={[
                   {
-                    key: 'id',
-                    header: 'ID',
+                    key: 'businessId',
+                    header: '业务ID',
                   },
                   {
-                    key: 'name',
-                    header: 'Name',
+                    key: 'businessName',
+                    header: '业务名称',
                   },
                   {
-                    key: 'type',
-                    header: '类型',
+                    key: 'part',
+                    header: '所属部门',
+                  },
+                  {
+                    key: 'businessKinds',
+                    header: '业务分类',
+                  },
+                  {
+                    key: 'process',
+                    header: '业务流程',
+                    render: record => {
+                      return (
+                        <Button
+                          type="link"
+                          style={{ color: 'orange' }}
+                          onClick={() => {
+                            handleProcess(record);
+                          }}
+                        >
+                          查看
+                        </Button>
+                      );
+                    },
+                  },
+                  {
+                    key: 'dataProcess',
+                    header: '数据流程',
+                    render: record => {
+                      return (
+                        <Button
+                          type="link"
+                          style={{ color: 'orange' }}
+                          onClick={() => {
+                            handleDataProcess(record);
+                          }}
+                        >
+                          查看
+                        </Button>
+                      );
+                    },
+                  },
+                  {
+                    key: 'addMen',
+                    header: '添加人',
                   },
                   {
                     key: 'createdAt',
-                    header: '创建时间',
+                    header: '添加时间',
                     render: record => formatDate(record.createdAt),
                   },
                   {
