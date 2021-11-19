@@ -69,7 +69,7 @@ export const tableColumns = (columns: any) => {
       header: '相关系统',
     },
     {
-      key: 'conSystem',
+      key: 'configurationPic',
       header: '架构图',
     },
     {
@@ -79,6 +79,10 @@ export const tableColumns = (columns: any) => {
     {
       key: 'createdAt',
       header: '添加时间',
+    },
+    {
+      key: 'action',
+      header: '操作',
     },
   ];
   let arr = [];

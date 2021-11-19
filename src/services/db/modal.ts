@@ -1,9 +1,10 @@
 export const DBName = 'SecSandbox';
-export const DBVersion = 3;
+export const DBVersion = 4;
 export const DBTableName = {
   project: 'project',
   app: 'app',
   data: 'data',
+  frame: 'frame',
 };
 
 export const DBConfig = {
@@ -31,6 +32,15 @@ export const DBConfig = {
     },
     {
       store: DBTableName.data,
+      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeSchema: [
+        { name: 'name', keypath: 'name', options: { unique: false } },
+        { name: 'type', keypath: 'type', options: { unique: false } },
+        { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
+      ],
+    },
+    {
+      store: DBTableName.frame,
       storeConfig: { keyPath: 'id', autoIncrement: true },
       storeSchema: [
         { name: 'name', keypath: 'name', options: { unique: false } },

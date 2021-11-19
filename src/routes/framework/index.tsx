@@ -1,25 +1,24 @@
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Input, Justify, Layout, message, Table } from '@tencent/tea-component';
+import { Button, Card, Input, Layout, message } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
 
 type RecordType = {
   id?: number;
-  businessId?: string;
-  businessName?: string;
-  part?: string;
-  businessKinds?: string;
-  process?: string;
-  dataProcess?: string;
+  systemConId?: string;
+  configurationName?: string;
+  connectArea?: string;
+  conSystem?: string;
+  configurationPic?: string;
   addMen?: string;
   createdAt?: string | number;
 };
 
 const BusinessPage: React.FC = () => {
   const [dataList, setDataList] = useState<RecordType[]>();
-  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.project);
+  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.frame);
 
   const [text, setText] = useState('');
 
@@ -41,13 +40,13 @@ const BusinessPage: React.FC = () => {
   // 点击添加按钮
   const onAdd = () => {
     add<RecordType>({
-      businessId: 'businessId123',
-      businessName: 'businessName123',
-      part: '11',
-      businessKinds: 'businessKinds123',
-      process: '查看',
-      dataProcess: '查看',
-      addMen: 'addMen111',
+      systemConId: 'businessId123',
+      configurationName: 'businessName123',
+      connectArea: '11',
+      conSystem: 'businessKinds123',
+      configurationPic: '查看',
+      addMen: '查看',
+
       createdAt: +new Date(),
     })
       .then(() => {
@@ -58,16 +57,42 @@ const BusinessPage: React.FC = () => {
         message.error({ content: `失败${err}` });
       });
   };
-  const handleProcess = data => {
+  const handleAction = (data: any) => {
     console.log(111, data);
   };
-  const handleDataProcess = data => {
+  const handleConfiguration = (data: any) => {
     console.log(222, data);
   };
 
   const config = {
-    db: 'data',
-    columns: ['systemConId', 'configurationName', 'connectArea', 'conSystem', 'conSystem', 'addMen', 'createdAt'],
+    db: 'frame',
+    columns: [
+      'systemConId',
+      'configurationName',
+      'connectArea',
+      'conSystem',
+      'conSystem',
+      'configurationPic',
+      'addMen',
+      'createdAt',
+      'action',
+    ],
+
+    left: (
+      <Input
+        value={text}
+        onChange={(value, context) => {
+          setText(value);
+          console.log(value, context);
+        }}
+        placeholder="请输入业务名称"
+      />
+    ),
+    right: (
+      <Button type="primary" onClick={onAdd}>
+        新增业务
+      </Button>
+    ),
   };
   return (
     <Body>
@@ -76,30 +101,12 @@ const BusinessPage: React.FC = () => {
         <Content.Body>
           <Card>
             <Card.Body>
-              <Table.ActionPanel>
-                <Justify
-                  left={
-                    <>
-                      <Input
-                        value={text}
-                        onChange={(value, context) => {
-                          setText(value);
-                          console.log(value, context);
-                        }}
-                        placeholder="请输入业务名称"
-                      />
-                    </>
-                  }
-                  right={
-                    <>
-                      <Button type="primary" onClick={onAdd}>
-                        新增业务
-                      </Button>
-                    </>
-                  }
-                />
-              </Table.ActionPanel>
-              <TableCommon {...config}></TableCommon>
+              <TableCommon
+                list={dataList}
+                {...config}
+                checkShow={handleConfiguration}
+                onAction={handleAction}
+              ></TableCommon>
             </Card.Body>
           </Card>
         </Content.Body>

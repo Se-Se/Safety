@@ -1,9 +1,6 @@
-import { DBTableName } from '@src/services';
 import { tableColumns } from '@src/utils/util';
-import { Layout, Table } from '@tencent/tea-component';
-import React, { useEffect, useState } from 'react';
-import { useIndexedDB } from 'react-indexed-db';
-const { Body, Content } = Layout;
+import { Button, Justify, Table } from '@tencent/tea-component';
+import React from 'react';
 
 type RecordType = {
   id?: number;
@@ -18,35 +15,52 @@ type RecordType = {
 };
 
 const TableCommon: React.FC<any> = props => {
-  console.log(props, 111111111);
-  const [dataList, setDataList] = useState<any[]>();
-  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName[props.db]);
-  let arr = [];
-
-  // 拉取数据
-  const fetchList = () => {
-    getAll()
-      .then(data => {
-        console.log(data, 123);
-        setDataList(data);
-      })
-      .catch(() => {});
+  const formatterColumns = () => {
+    let theArr = tableColumns(props.columns);
+    theArr.map(item => {
+      if (item.key === 'action') {
+        item.render = (record: any, key: any, index: any) => (
+          <>
+            <Button
+              type="link"
+              onClick={() => {
+                console.log(props, 666);
+                props.onAction(record);
+              }}
+            >
+              编辑
+            </Button>
+          </>
+        );
+      }
+      if (item.key === 'configurationPic') {
+        item.render = record => {
+          return (
+            <Button
+              type="link"
+              style={{ color: 'orange' }}
+              onClick={() => {
+                props.checkShow(record);
+              }}
+            >
+              查看
+            </Button>
+          );
+        };
+      }
+    });
+    return theArr;
   };
+  const arr = formatterColumns();
 
-  // 首次打开页面加载 第二个参数需要是空数组保证只加载一次
-  useEffect(() => {
-    arr = tableColumns(props.columns);
-    console.log(arr, 9999999999);
-    fetchList();
-  }, []);
-
-  // 点击添加按钮
-
-  // 拉取数据
-
-  // 首次打开页面加载 第二个参数需要是空数组保证只加载一次
-
-  return <Table<RecordType> verticalTop records={dataList} recordKey="id" bordered columns={arr} />;
+  return (
+    <>
+      <Table.ActionPanel>
+        <Justify left={props.left} right={props.right} />
+      </Table.ActionPanel>
+      <Table<RecordType> verticalTop records={props.list} recordKey="id" bordered columns={arr} />;
+    </>
+  );
 };
 
 export default TableCommon;
