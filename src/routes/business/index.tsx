@@ -1,9 +1,10 @@
 import { DBTableName } from '@src/services';
 import { formatDate } from '@src/utils/util';
-import { Button, Card, Input, Justify, Layout, message, Table } from '@tencent/tea-component';
+import { Button, Card, Input, Justify, Layout, message, Select, Table } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
+const { pageable } = Table.addons;
 
 type RecordType = {
   id?: number;
@@ -19,9 +20,10 @@ type RecordType = {
 
 const BusinessPage: React.FC = () => {
   const [dataList, setDataList] = useState<RecordType[]>();
-  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.project);
+  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.business);
 
   const [text, setText] = useState('');
+  const [selectPart, setSelectPart] = useState(null);
 
   // 拉取数据
   const fetchList = () => {
@@ -64,6 +66,10 @@ const BusinessPage: React.FC = () => {
   const handleDataProcess = data => {
     console.log(222, data);
   };
+  const parts = [
+    { value: 's1', text: '所属部门1' },
+    { value: 's2', text: '所属部门2' },
+  ];
   return (
     <Body>
       <Content>
@@ -83,6 +89,14 @@ const BusinessPage: React.FC = () => {
                         }}
                         placeholder="请输入业务名称"
                       />
+                      <Select
+                        style={{ width: '200px', marginLeft: '20px' }}
+                        appearance="button"
+                        options={parts}
+                        value={selectPart}
+                        onChange={value => setSelectPart(value)}
+                        placeholder="请选择所属部门"
+                      />
                     </>
                   }
                   right={
@@ -96,7 +110,7 @@ const BusinessPage: React.FC = () => {
               </Table.ActionPanel>
               <Table<RecordType>
                 verticalTop
-                records={dataList}
+                records={dataList || []}
                 recordKey="id"
                 bordered
                 columns={[
@@ -200,6 +214,7 @@ const BusinessPage: React.FC = () => {
                     ),
                   },
                 ]}
+                addons={[pageable()]}
               />
             </Card.Body>
           </Card>

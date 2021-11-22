@@ -61,11 +61,11 @@ export const tableColumns = (columns: any) => {
       header: '架构名称',
     },
     {
-      key: 'connectArea',
+      key: 'relationArea',
       header: '相关分区',
     },
     {
-      key: 'conSystem',
+      key: 'relationSystem',
       header: '相关系统',
     },
     {

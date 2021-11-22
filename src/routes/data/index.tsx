@@ -85,7 +85,7 @@ const BusinessPage: React.FC = () => {
                           setText(value);
                           console.log(value, context);
                         }}
-                        placeholder="请输入业务名称"
+                        placeholder="请输入数据名称"
                       />
                       <Select
                         style={{ width: '200px' }}
