@@ -1,9 +1,9 @@
+import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Justify, Layout, message, Table } from '@tencent/tea-component';
+import { Button, Card, Layout, message } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
-const { pageable } = Table.addons;
 
 type RecordType = {
   id?: number;
@@ -50,6 +50,27 @@ const ScenesPage: React.FC = () => {
         message.error({ content: `失败${err}` });
       });
   };
+  const handleDelete = (data: any): void => {
+    console.log(333, data);
+    deleteRecord(data.id)
+      .then(() => {
+        message.success({ content: '成功' });
+        fetchList();
+      })
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
+  };
+  const propsConfig = {
+    list: dataList,
+    columns: ['sceneName', 'strategy', 'attackObject', 'loseEffect', 'action'],
+
+    right: (
+      <Button type="primary" onClick={onAdd}>
+        添加
+      </Button>
+    ),
+  };
   return (
     <Body>
       <Content>
@@ -57,7 +78,8 @@ const ScenesPage: React.FC = () => {
         <Content.Body>
           <Card>
             <Card.Body>
-              <Table.ActionPanel>
+              <TableCommon {...propsConfig} delete={handleDelete}></TableCommon>
+              {/* <Table.ActionPanel>
                 <Justify
                   right={
                     <>
@@ -132,7 +154,7 @@ const ScenesPage: React.FC = () => {
                   },
                 ]}
                 addons={[pageable()]}
-              />
+              /> */}
             </Card.Body>
           </Card>
         </Content.Body>

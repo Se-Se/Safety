@@ -1,9 +1,9 @@
+import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Justify, Layout, message, Table } from '@tencent/tea-component';
+import { Button, Card, Layout, message } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
-const { pageable } = Table.addons;
 
 type RecordType = {
   id?: number;
@@ -39,7 +39,7 @@ const RecommendPage: React.FC = () => {
       recommendName: 'businessName123',
       category_1: '11',
       category_2: 'businessKinds123',
-      describe: '查看',
+      describe: 'describe',
       createdAt: +new Date(),
     })
       .then(() => {
@@ -50,6 +50,27 @@ const RecommendPage: React.FC = () => {
         message.error({ content: `失败${err}` });
       });
   };
+  const handleDelete = (data: any): void => {
+    console.log(333, data);
+    deleteRecord(data.id)
+      .then(() => {
+        message.success({ content: '成功' });
+        fetchList();
+      })
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
+  };
+  const propsConfig = {
+    list: dataList,
+    columns: ['recommendName', 'category_1', 'category_2', 'describe', 'action'],
+
+    right: (
+      <Button type="primary" onClick={onAdd}>
+        增加
+      </Button>
+    ),
+  };
   return (
     <Body>
       <Content>
@@ -57,7 +78,8 @@ const RecommendPage: React.FC = () => {
         <Content.Body>
           <Card>
             <Card.Body>
-              <Table.ActionPanel>
+              <TableCommon {...propsConfig} delete={handleDelete}></TableCommon>
+              {/* <Table.ActionPanel>
                 <Justify
                   right={
                     <>
@@ -132,7 +154,7 @@ const RecommendPage: React.FC = () => {
                   },
                 ]}
                 addons={[pageable()]}
-              />
+              /> */}
             </Card.Body>
           </Card>
         </Content.Body>

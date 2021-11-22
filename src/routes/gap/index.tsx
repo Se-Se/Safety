@@ -1,9 +1,9 @@
+import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Justify, Layout, message, Table } from '@tencent/tea-component';
+import { Button, Card, Layout, message } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
-const { pageable } = Table.addons;
 
 type RecordType = {
   id?: number;
@@ -48,6 +48,27 @@ const GapPage: React.FC = () => {
         message.error({ content: `失败${err}` });
       });
   };
+  const handleDelete = (data: any): void => {
+    console.log(333, data);
+    deleteRecord(data.id)
+      .then(() => {
+        message.success({ content: '成功' });
+        fetchList();
+      })
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
+  };
+  const propsConfig = {
+    list: dataList,
+    columns: ['gapName', 'categorys', 'remarks', 'action'],
+
+    right: (
+      <Button type="primary" onClick={onAdd}>
+        增加
+      </Button>
+    ),
+  };
   return (
     <Body>
       <Content>
@@ -55,78 +76,7 @@ const GapPage: React.FC = () => {
         <Content.Body>
           <Card>
             <Card.Body>
-              <Table.ActionPanel>
-                <Justify
-                  right={
-                    <>
-                      <Button type="primary" onClick={onAdd}>
-                        添加
-                      </Button>
-                    </>
-                  }
-                />
-              </Table.ActionPanel>
-              <Table<RecordType>
-                verticalTop
-                records={dataList || []}
-                recordKey="id"
-                bordered
-                columns={[
-                  {
-                    key: 'gapName',
-                    header: '名称',
-                  },
-                  {
-                    key: 'categorys',
-                    header: '分类',
-                  },
-                  {
-                    key: 'remarks',
-                    header: '备注说明',
-                  },
-                  {
-                    key: 'action',
-                    header: '操作',
-                    width: 100,
-                    render: (record, key, index) => (
-                      <>
-                        <Button
-                          type="link"
-                          onClick={() => {
-                            update<RecordType>({ ...record, id: record.id, createdAt: +new Date() })
-                              .then(() => {
-                                message.success({ content: '成功' });
-                                fetchList();
-                              })
-                              .catch(err => {
-                                message.error({ content: `失败${err}` });
-                              });
-                          }}
-                        >
-                          编辑
-                        </Button>
-                        <Button
-                          type="link"
-                          style={{ color: '#e54545' }}
-                          onClick={() => {
-                            deleteRecord(record.id)
-                              .then(() => {
-                                message.success({ content: '成功' });
-                                fetchList();
-                              })
-                              .catch(err => {
-                                message.error({ content: `失败${err}` });
-                              });
-                          }}
-                        >
-                          删除
-                        </Button>
-                      </>
-                    ),
-                  },
-                ]}
-                addons={[pageable()]}
-              />
+              <TableCommon {...propsConfig} delete={handleDelete}></TableCommon>
             </Card.Body>
           </Card>
         </Content.Body>

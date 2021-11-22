@@ -1,6 +1,6 @@
+import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { formatDate } from '@src/utils/util';
-import { Button, Card, Input, Justify, Layout, message, Select, Table } from '@tencent/tea-component';
+import { Button, Card, Input, Layout, message, Select } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
@@ -57,16 +57,52 @@ const BusinessPage: React.FC = () => {
         message.error({ content: `失败${err}` });
       });
   };
-  const handleProcess = data => {
-    console.log(111, data);
-  };
-  const handleDataProcess = data => {
-    console.log(222, data);
+
+  const handleDelete = (data: any): void => {
+    console.log(333, data);
+    deleteRecord(data.id)
+      .then(() => {
+        message.success({ content: '成功' });
+        fetchList();
+      })
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
   };
   const options = [
     { value: 's1', text: '系统1' },
     { value: 's2', text: '系统2' },
   ];
+  const propsConfig = {
+    list: dataList,
+    columns: ['systemId', 'dataName', 'systemPart', 'area', 'systemKinds', 'addMen', 'createdAt', 'action'],
+    left: (
+      <>
+        <Input
+          value={text}
+          style={{ marginRight: '20px' }}
+          onChange={(value, context) => {
+            setText(value);
+            console.log(value, context);
+          }}
+          placeholder="请输入数据名称"
+        />
+        <Select
+          style={{ width: '200px' }}
+          appearance="button"
+          options={options}
+          value={favorite}
+          onChange={value => setFavorite(value)}
+          placeholder="请选择所属系统"
+        />
+      </>
+    ),
+    right: (
+      <Button type="primary" onClick={onAdd}>
+        新增数据
+      </Button>
+    ),
+  };
   return (
     <Body>
       <Content>
@@ -74,7 +110,8 @@ const BusinessPage: React.FC = () => {
         <Content.Body>
           <Card>
             <Card.Body>
-              <Table.ActionPanel>
+              <TableCommon {...propsConfig} delete={handleDelete}></TableCommon>
+              {/* <Table.ActionPanel>
                 <Justify
                   left={
                     <>
@@ -182,7 +219,7 @@ const BusinessPage: React.FC = () => {
                     ),
                   },
                 ]}
-              />
+              /> */}
             </Card.Body>
           </Card>
         </Content.Body>

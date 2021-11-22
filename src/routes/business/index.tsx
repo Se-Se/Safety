@@ -1,10 +1,9 @@
+import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { formatDate } from '@src/utils/util';
-import { Button, Card, Input, Justify, Layout, message, Select, Table } from '@tencent/tea-component';
+import { Button, Card, Input, Layout, message, Select } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
-const { pageable } = Table.addons;
 
 type RecordType = {
   id?: number;
@@ -60,7 +59,18 @@ const BusinessPage: React.FC = () => {
         message.error({ content: `失败${err}` });
       });
   };
-  const handleProcess = data => {
+  const handleDelete = (data: any): void => {
+    console.log(333, data);
+    deleteRecord(data.id)
+      .then(() => {
+        message.success({ content: '成功' });
+        fetchList();
+      })
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
+  };
+  const handleShowProcess = (data): void => {
     console.log(111, data);
   };
   const handleDataProcess = data => {
@@ -70,6 +80,45 @@ const BusinessPage: React.FC = () => {
     { value: 's1', text: '所属部门1' },
     { value: 's2', text: '所属部门2' },
   ];
+  const propsConfig = {
+    list: dataList,
+    columns: [
+      'businessId',
+      'businessName',
+      'part',
+      'businessKinds',
+      'process',
+      'dataProcess',
+      'addMen',
+      'createdAt',
+      'action',
+    ],
+    left: (
+      <>
+        <Input
+          value={text}
+          onChange={(value, context) => {
+            setText(value);
+            console.log(value, context);
+          }}
+          placeholder="请输入业务名称"
+        />
+        <Select
+          style={{ width: '200px', marginLeft: '20px' }}
+          appearance="button"
+          options={parts}
+          value={selectPart}
+          onChange={value => setSelectPart(value)}
+          placeholder="请选择所属部门"
+        />
+      </>
+    ),
+    right: (
+      <Button type="primary" onClick={onAdd}>
+        新增业务
+      </Button>
+    ),
+  };
   return (
     <Body>
       <Content>
@@ -77,145 +126,12 @@ const BusinessPage: React.FC = () => {
         <Content.Body>
           <Card>
             <Card.Body>
-              <Table.ActionPanel>
-                <Justify
-                  left={
-                    <>
-                      <Input
-                        value={text}
-                        onChange={(value, context) => {
-                          setText(value);
-                          console.log(value, context);
-                        }}
-                        placeholder="请输入业务名称"
-                      />
-                      <Select
-                        style={{ width: '200px', marginLeft: '20px' }}
-                        appearance="button"
-                        options={parts}
-                        value={selectPart}
-                        onChange={value => setSelectPart(value)}
-                        placeholder="请选择所属部门"
-                      />
-                    </>
-                  }
-                  right={
-                    <>
-                      <Button type="primary" onClick={onAdd}>
-                        新增业务
-                      </Button>
-                    </>
-                  }
-                />
-              </Table.ActionPanel>
-              <Table<RecordType>
-                verticalTop
-                records={dataList || []}
-                recordKey="id"
-                bordered
-                columns={[
-                  {
-                    key: 'businessId',
-                    header: '业务ID',
-                  },
-                  {
-                    key: 'businessName',
-                    header: '业务名称',
-                  },
-                  {
-                    key: 'part',
-                    header: '所属部门',
-                  },
-                  {
-                    key: 'businessKinds',
-                    header: '业务分类',
-                  },
-                  {
-                    key: 'process',
-                    header: '业务流程',
-                    render: record => {
-                      return (
-                        <Button
-                          type="link"
-                          style={{ color: 'orange' }}
-                          onClick={() => {
-                            handleProcess(record);
-                          }}
-                        >
-                          查看
-                        </Button>
-                      );
-                    },
-                  },
-                  {
-                    key: 'dataProcess',
-                    header: '数据流程',
-                    render: record => {
-                      return (
-                        <Button
-                          type="link"
-                          style={{ color: 'orange' }}
-                          onClick={() => {
-                            handleDataProcess(record);
-                          }}
-                        >
-                          查看
-                        </Button>
-                      );
-                    },
-                  },
-                  {
-                    key: 'addMen',
-                    header: '添加人',
-                  },
-                  {
-                    key: 'createdAt',
-                    header: '添加时间',
-                    render: record => formatDate(record.createdAt),
-                  },
-                  {
-                    key: 'action',
-                    header: '操作',
-                    width: 100,
-                    render: (record, key, index) => (
-                      <>
-                        <Button
-                          type="link"
-                          onClick={() => {
-                            update<RecordType>({ ...record, id: record.id, createdAt: +new Date() })
-                              .then(() => {
-                                message.success({ content: '成功' });
-                                fetchList();
-                              })
-                              .catch(err => {
-                                message.error({ content: `失败${err}` });
-                              });
-                          }}
-                        >
-                          编辑
-                        </Button>
-                        <Button
-                          type="link"
-                          style={{ color: '#e54545' }}
-                          onClick={() => {
-                            deleteRecord(record.id)
-                              .then(() => {
-                                message.success({ content: '成功' });
-                                fetchList();
-                              })
-                              .catch(err => {
-                                message.error({ content: `失败${err}` });
-                              });
-                          }}
-                        >
-                          删除
-                        </Button>
-                      </>
-                    ),
-                  },
-                ]}
-                addons={[pageable()]}
-              />
+              <TableCommon
+                {...propsConfig}
+                showProcess={handleShowProcess}
+                showDataProcess={handleDataProcess}
+                delete={handleDelete}
+              ></TableCommon>
             </Card.Body>
           </Card>
         </Content.Body>
