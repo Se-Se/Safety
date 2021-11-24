@@ -1,0 +1,20 @@
+.main-wrap {
+  width: 800px;
+}
+.main-card-body {
+  /* display: flex;
+  flex-wrap: wrap;
+  justify-content: left;
+  flex-direction: row; */
+  float: left;
+  width: 100%;
+}
+.main-card-item {
+  width: 300px;
+  word-wrap: break-word;
+  overflow: hidden;
+}
+.main-modal {
+  width: 600px;
+  margin: auto;
+}

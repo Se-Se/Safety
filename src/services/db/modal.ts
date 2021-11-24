@@ -1,6 +1,7 @@
 export const DBName = 'SecSandbox';
-export const DBVersion = 8;
+export const DBVersion = 9;
 export const DBTableName = {
+  trade: 'trade',
   project: 'project',
   app: 'app',
   business: 'business',
@@ -16,6 +17,15 @@ export const DBConfig = {
   version: DBVersion,
   // 这里定义表表结构
   objectStoresMeta: [
+    {
+      store: DBTableName.trade,
+      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeSchema: [
+        { name: 'tradeN', keypath: 'tradeN', options: { unique: false } },
+        { name: 'description', keypath: 'description', options: { unique: false } },
+        { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
+      ],
+    },
     {
       store: DBTableName.business,
       storeConfig: { keyPath: 'id', autoIncrement: true },
