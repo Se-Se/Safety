@@ -1,5 +1,6 @@
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
+import { useHistory } from '@tea/app';
 import { Button, Card, Input, Layout, message, Select } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
@@ -23,6 +24,8 @@ const FramePage: React.FC = () => {
   const [text, setText] = useState('');
   const [selectSys, setSelectSys] = useState(null);
   const [selectArea, setSelectArea] = useState(null);
+
+  const history = useHistory();
 
   // 拉取数据
   const fetchList = () => {
@@ -72,6 +75,7 @@ const FramePage: React.FC = () => {
   };
   const handleShowConfiguration = data => {
     console.log(111, data);
+    history.push('/configuration');
   };
 
   const systems = [

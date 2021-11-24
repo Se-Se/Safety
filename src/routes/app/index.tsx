@@ -1,10 +1,9 @@
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Input, Layout, message, Select, Table } from '@tencent/tea-component';
+import { Button, Card, Input, Layout, message, Select } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { Body, Content } = Layout;
-const { pageable } = Table.addons;
 
 type RecordType = {
   id?: number;

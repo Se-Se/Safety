@@ -1,0 +1,22 @@
+.my-grid-group {
+    position: absolute;
+    border: 1px solid black;
+}
+
+.grid-inner {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-between;
+    /* float: left; */
+}
+
+.my-grid-item {
+    border: 1px solid black;
+    background-color: brown;
+    width: 50px;
+    height: 50px;
+    margin: 20px;
+    /* float: left; */
+    /* display: inline-block; */
+}
