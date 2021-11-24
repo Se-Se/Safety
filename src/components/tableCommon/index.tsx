@@ -1,6 +1,7 @@
-import { Button, Justify, Table } from '@tencent/tea-component';
-import React from 'react';
-const { pageable } = Table.addons;
+import { Button, Justify, Table, Icon } from '@tencent/tea-component';
+import React, { useState } from 'react';
+import { formatDate } from '@src/utils/util';
+const { pageable, selectable } = Table.addons;
 
 type RecordType = {
   id?: number;
@@ -28,16 +29,13 @@ const TableCommon: React.FC<any> = props => {
       },
       {
         key: 'businessKinds',
-        header: '业务分类',
+        header: '业务大类',
       },
       {
-        key: 'process',
-        header: '业务流程',
+        key: 'businessPic',
+        header: '业务资产图',
       },
-      {
-        key: 'dataProcess',
-        header: '数据流程',
-      },
+
       //////////////////////////////
       // app
 
@@ -158,16 +156,26 @@ const TableCommon: React.FC<any> = props => {
         header: '添加时间',
       },
       {
+        key: 'editMen',
+        header: '修改人',
+      },
+      {
+        key: 'editedAt',
+        header: '最后修改时间',
+      },
+      {
         key: 'action',
         header: '操作',
       },
       ///////////////////////////////////////////////////
     ];
     let arr = [];
-    allColumns.map(item => {
-      if (columns.indexOf(item.key) > -1) {
-        arr.push(item);
-      }
+    columns.map(item => {
+      allColumns.map(column => {
+        if (item === column.key) {
+          arr.push(column);
+        }
+      });
     });
     console.log(999, arr);
     arr.map(item => {
@@ -210,29 +218,13 @@ const TableCommon: React.FC<any> = props => {
           );
         };
       }
-      if (item.key === 'process') {
+      if (item.key === 'businessPic') {
         item.render = record => {
           return (
             <Button
               type="link"
-              style={{ color: 'orange' }}
               onClick={() => {
-                props.showProcess(record);
-              }}
-            >
-              查看
-            </Button>
-          );
-        };
-      }
-      if (item.key === 'dataProcess') {
-        item.render = record => {
-          return (
-            <Button
-              type="link"
-              style={{ color: 'orange' }}
-              onClick={() => {
-                props.showDataProcess(record);
+                props.showPic(record);
               }}
             >
               查看
@@ -255,11 +247,18 @@ const TableCommon: React.FC<any> = props => {
           );
         };
       }
+      if (item.key === 'createdAt') {
+        item.render = record => formatDate(record.createdAt);
+      }
+      if (item.key === 'editedAt') {
+        item.render = record => formatDate(record.editedAt);
+      }
     });
     return arr;
   };
 
   const arr = getColumns(props.columns);
+  const [selectedKeys, setSelectedKeys] = useState([]);
 
   return (
     <>
@@ -272,9 +271,22 @@ const TableCommon: React.FC<any> = props => {
         recordKey="id"
         bordered
         columns={arr}
-        addons={[pageable()]}
+        addons={[
+          pageable(),
+          selectable({
+            value: selectedKeys,
+            onChange: (keys, context) => {
+              console.log(keys, context);
+              setSelectedKeys(keys);
+            },
+            rowSelect: true,
+            render: (element, { disabled }) => {
+              return disabled ? <Icon type="loading" /> : element;
+            },
+          }),
+        ]}
+        className="common-table"
       />
-      ;
     </>
   );
 };

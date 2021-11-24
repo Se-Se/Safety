@@ -30,9 +30,15 @@ export const DBConfig = {
       store: DBTableName.business,
       storeConfig: { keyPath: 'id', autoIncrement: true },
       storeSchema: [
-        { name: 'name', keypath: 'name', options: { unique: false } },
-        { name: 'type', keypath: 'type', options: { unique: false } },
+        { name: 'businessId', keypath: 'businessId', options: { unique: false } },
+        { name: 'businessName', keypath: 'businessName', options: { unique: false } },
+        { name: 'part', keypath: 'part', options: { unique: false } },
+        { name: 'businessKinds', keypath: 'businessKinds', options: { unique: false } },
+        { name: 'addMen', keypath: 'addMen', options: { unique: false } },
         { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
+        { name: 'editMen', keypath: 'editMen', options: { unique: false } },
+        { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
+        { name: 'businessPic', keypath: 'businessPic', options: { unique: false } },
       ],
     },
     {
