@@ -252,6 +252,7 @@ const AppPage: React.FC = () => {
                 isEdit={isEdit}
                 save={handleSave}
                 theData={modalData}
+                allData={dataList}
                 visible={showModal}
               />
               <TableCommon

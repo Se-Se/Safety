@@ -33,7 +33,7 @@ export default function AddModal(props) {
     init();
   };
   const checkSave = () => {
-    if (props.allData) {
+    if (props.allData && !props.isEdit) {
       let arr = [];
       props.allData.map(item => {
         arr.push(item.businessName);
@@ -67,6 +67,7 @@ export default function AddModal(props) {
         businessName: businessN.trim(),
         part: thePart.trim(),
         businessKinds: businessK.trim(),
+        editMen: 'editMen',
         editedAt: +new Date(),
       })
         .then(() => {
@@ -80,7 +81,7 @@ export default function AddModal(props) {
         });
     } else {
       add<RecordType>({
-        businessId: 'id' + new Date(),
+        businessId: 'business_id' + new Date().getTime(),
         businessName: businessN.trim(),
         part: thePart.trim(),
         businessKinds: businessK.trim(),

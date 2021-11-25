@@ -52,6 +52,10 @@ const TableCommon: React.FC<any> = props => {
       // /////////////////////////////////////////
       // data
       {
+        key: 'dataId',
+        header: '数据id',
+      },
+      {
         key: 'dataName',
         header: '数据名称',
       },

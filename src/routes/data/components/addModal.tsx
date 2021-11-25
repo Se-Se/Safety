@@ -3,7 +3,7 @@ import { Modal, Button, Row, Col, Input, message, Select } from '@tencent/tea-co
 import { useIndexedDB } from 'react-indexed-db';
 import { DBTableName } from '@src/services';
 
-type RecordType = {
+type AppType = {
   id?: number;
   systemId?: string;
   systemName?: string;
@@ -15,17 +15,16 @@ type RecordType = {
   editMen?: string;
   editedAt?: string | number;
 };
-type Business = {
+type DataType = {
   id?: number;
-  businessId?: string;
-  businessName?: string;
-  part?: string;
-  businessKinds?: string;
+  dataId?: string;
+  dataName?: string;
+  systemPart?: string;
+  systemKinds?: string;
   addMen?: string;
   createdAt?: string | number;
   editMen?: string;
   editedAt?: string | number;
-  businessPic?: string;
 };
 
 const systemOption = [
@@ -34,22 +33,22 @@ const systemOption = [
 ];
 
 export default function AddModal(props) {
-  const { add, update } = useIndexedDB(DBTableName.app);
-  const { getAll } = useIndexedDB(DBTableName.business);
-  const [businessData, setBusinessData] = useState<Business[]>();
+  const { add, update } = useIndexedDB(DBTableName.data);
+  const { getAll } = useIndexedDB(DBTableName.app);
+  const [tableData, setTableData] = useState<AppType[]>();
 
-  const [systemN, setSystemN] = useState('');
-  const [theBusiness, setTheBusiness] = useState('');
-  const [businessK, setBusinessK] = useState('');
-  const [systemK, setSystemK] = useState('');
-  const [businessNameArr, setBusinessNameArr] = useState([]);
+  const [theName, setTheName] = useState('');
+  const [belongSelect, setBelongSelect] = useState('');
+  const [belongField, setBelongField] = useState('');
+
+  const [belongOption, setBelongOption] = useState([]);
 
   // 拉取数据
   const fetchList = () => {
     getAll()
       .then(data => {
         getSelecOptions(data);
-        setBusinessData(data);
+        setTableData(data);
       })
       .catch(() => {});
   };
@@ -59,88 +58,79 @@ export default function AddModal(props) {
       fetchList();
     }
   }, [props.visible]);
+
   const getSelecOptions = data => {
     if (!data) {
       return;
     }
 
-    const theNameArr = [];
+    const options = [];
     data.map(item => {
       const obj: any = {};
-      obj.value = item.businessName;
-      obj.text = item.businessName;
-      theNameArr.push(obj);
+      obj.value = item.systemName;
+      obj.text = item.systemName;
+      options.push(obj);
     });
 
-    setBusinessNameArr([...theNameArr]);
+    setBelongOption([...options]);
     console.log(7777777777777);
   };
+
   // select change 事件
   const handleSelectChange = (v, attr) => {
     console.log(v);
-    if (attr === 'theBusiness') {
-      setTheBusiness(v);
-      businessData.map(item => {
-        if (item.businessName === v) {
-          setBusinessK(item.businessKinds);
+    if (attr === 'belongSelect') {
+      setBelongSelect(v);
+      tableData.map(item => {
+        if (item.systemName === v) {
+          setBelongField(item.systemKinds);
         }
       });
     }
-    if (attr === 'systemK') {
-      setSystemK(v);
-    }
   };
   const init = () => {
-    setSystemN('');
-    setTheBusiness('');
-    setBusinessK('');
-    setSystemK('');
+    setTheName('');
+    setBelongSelect('');
+    setBelongField('');
   };
   const close = () => {
     console.log(1111111);
     props.close();
     init();
   };
-
   // 检查系统名称是否已存在
   const checkSave = () => {
     if (props.allData && !props.isEdit) {
       let arr = [];
       props.allData.map(item => {
-        arr.push(item.systemName);
+        arr.push(item.dataName);
       });
-      if (arr.indexOf(systemN.trim()) > -1) {
-        message.error({ content: '系统名称已存在' });
+      if (arr.indexOf(theName.trim()) > -1) {
+        message.error({ content: '数据名称已存在' });
         return false;
       }
     }
     return true;
   };
-
   const handleSave = () => {
-    if (systemN.trim() === '') {
-      message.success({ content: '请输入业务名称' });
+    if (theName.trim() === '') {
+      message.success({ content: '请输入数据名称' });
       return;
     }
-    if (theBusiness.trim() === '') {
-      message.success({ content: '请选择所属部门' });
-      return;
-    }
-    if (systemK.trim() === '') {
-      message.success({ content: '请选择系统类型' });
+    if (belongSelect.trim() === '') {
+      message.success({ content: '请选择所属系统' });
       return;
     }
     if (!checkSave()) {
       return;
     }
     if (props.isEdit) {
-      update<RecordType>({
+      update<DataType>({
         ...props.theData,
-        systemName: systemN.trim(),
-        business: theBusiness.trim(),
-        businessKinds: businessK.trim(),
-        systemKinds: systemK.trim(),
-        editMen: 'editMen',
+        dataName: theName.trim(),
+        systemPart: belongSelect.trim(),
+        systemKinds: belongField.trim(),
+        editMen: 'editMan',
         editedAt: +new Date(),
       })
         .then(() => {
@@ -153,12 +143,12 @@ export default function AddModal(props) {
           message.error({ content: `失败${err}` });
         });
     } else {
-      add<RecordType>({
-        systemId: 'app_id' + new Date().getTime(),
-        systemName: systemN.trim(),
-        business: theBusiness.trim(),
-        businessKinds: businessK.trim(),
-        systemKinds: systemK.trim(),
+      add<DataType>({
+        dataId: 'dataId' + new Date().getTime(),
+        dataName: theName.trim(),
+        systemPart: belongSelect.trim(),
+        systemKinds: belongField.trim(),
+        addMen: 'addMen',
         createdAt: +new Date(),
       })
         .then(() => {
@@ -174,10 +164,9 @@ export default function AddModal(props) {
   };
   useEffect(() => {
     if (props.theData && props.isEdit) {
-      setSystemN(props.theData.systemName);
-      setTheBusiness(props.theData.business);
-      setBusinessK(props.theData.businessKinds);
-      setSystemK(props.theData.systemKinds);
+      setTheName(props.theData.dataName);
+      setBelongSelect(props.theData.systemName);
+      setBelongField(props.theData.systemKinds);
     }
   }, [props.theData]);
 
@@ -187,47 +176,30 @@ export default function AddModal(props) {
         <Modal.Body>
           <Row>
             <Col span={1}></Col>
-            <Col span={6}>系统名称</Col>
+            <Col span={6}>数据名称</Col>
             <Col span={12}>
               <Input
                 size="full"
-                value={systemN}
+                value={theName}
                 onChange={(value, context) => {
-                  setSystemN(value);
+                  setTheName(value);
                 }}
-                placeholder="请输入系统名称"
+                placeholder="请输入数据名称"
               />
             </Col>
           </Row>
           <Row>
             <Col span={1}></Col>
-            <Col span={6}>所属业务</Col>
+            <Col span={6}>所属系统</Col>
             <Col span={12}>
               <Select
                 clearable
                 matchButtonWidth
                 appearance="button"
-                placeholder="请选择所属业务"
-                options={businessNameArr}
+                placeholder="请选择所属系统"
+                options={belongOption}
                 onChange={value => {
-                  handleSelectChange(value, 'theBusiness');
-                }}
-                size="full"
-              />
-            </Col>
-          </Row>
-          <Row>
-            <Col span={1}></Col>
-            <Col span={6}>系统类型</Col>
-            <Col span={12}>
-              <Select
-                clearable
-                matchButtonWidth
-                appearance="button"
-                placeholder="请选择系统类型"
-                options={systemOption}
-                onChange={value => {
-                  handleSelectChange(value, 'systemK');
+                  handleSelectChange(value, 'belongSelect');
                 }}
                 size="full"
               />
