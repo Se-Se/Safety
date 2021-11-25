@@ -20,6 +20,7 @@ import GapPage from './routes/gap';
 import RecommendPage from './routes/recommend';
 import ScenesPage from './routes/scenes';
 import MainPage  from './routes/main';
+import PropertyPage from './routes/property';
 
 // 导入样式
 import '@tencent/tea-component/lib/tea.css';
@@ -44,6 +45,7 @@ const routes = {
   '/recommend': RecommendPage,
   '/configuration': Configuration,
   '/main':MainPage,
+  '/property':PropertyPage,
 };
 
 // 注册路由表/左侧菜单

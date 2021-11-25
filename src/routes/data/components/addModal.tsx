@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Row, Col, Input, message, Select } from '@tencent/tea-component';
-import { useIndexedDB } from 'react-indexed-db';
 import { DBTableName } from '@src/services';
+import { Button, Col, Input, message, Modal, Row, Select } from '@tencent/tea-component';
+import React, { useEffect, useState } from 'react';
+import { useIndexedDB } from 'react-indexed-db';
 
 type AppType = {
   id?: number;

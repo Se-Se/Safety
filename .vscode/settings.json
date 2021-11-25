@@ -2,8 +2,8 @@
   "editor.formatOnSave": true,
   "editor.codeActionsOnSave": {
     "source.fixAll": true,
-    "source.organizeImports": false
+    "source.organizeImports": true
   },
   "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "files.insertFinalNewline": true,
+  "files.insertFinalNewline": false,
 }

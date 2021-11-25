@@ -1,6 +1,6 @@
-import { Button, Justify, Table, Icon } from '@tencent/tea-component';
-import React, { useState } from 'react';
 import { formatDate } from '@src/utils/util';
+import { Button, Icon, Justify, Table } from '@tencent/tea-component';
+import React, { useState } from 'react';
 const { pageable, selectable } = Table.addons;
 
 type RecordType = {
@@ -63,28 +63,37 @@ const TableCommon: React.FC<any> = props => {
         key: 'systemPart',
         header: '所属系统',
       },
-
-      // frame
+      // perproty
       {
-        key: 'systemConId',
-        header: '系统架构ID',
+        key: 'propertyId',
+        header: '资产id',
       },
       {
-        key: 'configurationName',
-        header: '架构名称',
+        key: 'propertyName',
+        header: '资产名称',
+      },
+      {
+        key: 'propertyKind',
+        header: '资产类型',
+      },
+      // frame
+      {
+        key: 'areaId',
+        header: '分区ID',
+      },
+      {
+        key: 'areaName',
+        header: '分区名称',
       },
       {
         key: 'relationArea',
         header: '相关分区',
       },
       {
-        key: 'relationSystem',
-        header: '相关系统',
+        key: 'systemAndProperty',
+        header: '包含系统/资产',
       },
-      {
-        key: 'configurationPic',
-        header: '架构图',
-      },
+
       // scenes
       {
         key: 'sceneName',
@@ -207,21 +216,7 @@ const TableCommon: React.FC<any> = props => {
           </>
         );
       }
-      if (item.key === 'configurationPic') {
-        item.render = record => {
-          return (
-            <Button
-              type="link"
-              style={{ color: 'orange' }}
-              onClick={() => {
-                props.checkShow(record);
-              }}
-            >
-              查看
-            </Button>
-          );
-        };
-      }
+
       if (item.key === 'businessPic') {
         item.render = record => {
           return (
@@ -237,21 +232,7 @@ const TableCommon: React.FC<any> = props => {
           );
         };
       }
-      if (item.key === 'configurationPic') {
-        item.render = record => {
-          return (
-            <Button
-              type="link"
-              style={{ color: 'orange' }}
-              onClick={() => {
-                props.showConfiguration(record);
-              }}
-            >
-              查看
-            </Button>
-          );
-        };
-      }
+
       if (item.key === 'createdAt') {
         item.render = record => formatDate(record.createdAt);
       }
