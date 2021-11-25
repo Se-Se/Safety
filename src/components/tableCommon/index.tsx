@@ -223,7 +223,8 @@ const TableCommon: React.FC<any> = props => {
           return (
             <Button
               type="link"
-              onClick={() => {
+              onClick={ev => {
+                ev.stopPropagation();
                 props.showPic(record);
               }}
             >
@@ -277,6 +278,7 @@ const TableCommon: React.FC<any> = props => {
             value: selectedKeys,
             onChange: (keys, context) => {
               console.log(keys, context);
+              props.selectItems(keys);
               setSelectedKeys(keys);
             },
             rowSelect: true,

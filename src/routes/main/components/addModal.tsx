@@ -10,8 +10,7 @@ type RecordType = {
   createdAt?: string | number;
 };
 export default function AddModal(props) {
-  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.trade);
-  const [visible, setVisible] = useState(false);
+  const { add, update } = useIndexedDB(DBTableName.trade);
   const [title, setTitle] = useState('');
   const [desText, setDesText] = useState('');
 
