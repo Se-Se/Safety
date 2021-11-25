@@ -1,9 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Modal, Button, Row, Col, Input, message } from '@tencent/tea-component';
+import { Modal, Button, Row, Col, Input, message, Select } from '@tencent/tea-component';
 import { useIndexedDB } from 'react-indexed-db';
 import { DBTableName } from '@src/services';
 
 type RecordType = {
+  id?: number;
+  systemId?: string;
+  systemName?: string;
+  business?: string;
+  businessKinds?: string;
+  systemKinds?: string;
+  addMen?: string;
+  createdAt?: string | number;
+  editMen?: string;
+  editedAt?: string | number;
+};
+type Business = {
   id?: number;
   businessId?: string;
   businessName?: string;
@@ -15,17 +27,74 @@ type RecordType = {
   editedAt?: string | number;
   businessPic?: string;
 };
+
+const systemOption = [
+  { value: 'otherSys', text: '第三方系统' },
+  { value: 'ownSys', text: '内部系统' },
+];
+
 export default function AddModal(props) {
-  const { add, update } = useIndexedDB(DBTableName.business);
+  const { add, update } = useIndexedDB(DBTableName.app);
+  const { getAll } = useIndexedDB(DBTableName.business);
+  const [businessData, setBusinessData] = useState<Business[]>();
 
-  const [businessN, setBusinessN] = useState('');
-  const [thePart, setThePart] = useState('');
+  const [systemN, setSystemN] = useState('');
+  const [theBusiness, setTheBusiness] = useState('');
   const [businessK, setBusinessK] = useState('');
+  const [systemK, setSystemK] = useState('');
+  const [businessNameArr, setBusinessNameArr] = useState([]);
 
+  // 拉取数据
+  const fetchList = () => {
+    getAll()
+      .then(data => {
+        getSelecOptions(data);
+        setBusinessData(data);
+      })
+      .catch(() => {});
+  };
+  // 首次打开页面加载
+  useEffect(() => {
+    if (props.visible) {
+      fetchList();
+    }
+  }, [props.visible]);
+  const getSelecOptions = data => {
+    if (!data) {
+      return;
+    }
+
+    const theNameArr = [];
+    data.map(item => {
+      const obj: any = {};
+      obj.value = item.businessName;
+      obj.text = item.businessName;
+      theNameArr.push(obj);
+    });
+
+    setBusinessNameArr([...theNameArr]);
+    console.log(7777777777777);
+  };
+  // select change 事件
+  const handleSelectChange = (v, attr) => {
+    console.log(v);
+    if (attr === 'theBusiness') {
+      setTheBusiness(v);
+      businessData.map(item => {
+        if (item.businessName === v) {
+          setBusinessK(item.businessKinds);
+        }
+      });
+    }
+    if (attr === 'systemK') {
+      setSystemK(v);
+    }
+  };
   const init = () => {
-    setBusinessN('');
-    setThePart('');
+    setSystemN('');
+    setTheBusiness('');
     setBusinessK('');
+    setSystemK('');
   };
   const close = () => {
     console.log(1111111);
@@ -33,24 +102,25 @@ export default function AddModal(props) {
     init();
   };
   const handleSave = () => {
-    if (businessN.trim() === '') {
+    if (systemN.trim() === '') {
       message.success({ content: '请输入业务名称' });
       return;
     }
-    if (thePart.trim() === '') {
-      message.success({ content: '请输入所属部门' });
+    if (theBusiness.trim() === '') {
+      message.success({ content: '请选择所属部门' });
       return;
     }
-    if (businessK.trim() === '') {
-      message.success({ content: '请输入业务大类' });
+    if (systemK.trim() === '') {
+      message.success({ content: '请选择系统类型' });
       return;
     }
     if (props.isEdit) {
       update<RecordType>({
         ...props.theData,
-        businessName: businessN,
-        part: thePart,
-        businessKinds: businessK,
+        systemName: systemN.trim(),
+        business: theBusiness.trim(),
+        businessKinds: businessK.trim(),
+        systemKinds: systemK.trim(),
         editedAt: +new Date(),
       })
         .then(() => {
@@ -64,10 +134,11 @@ export default function AddModal(props) {
         });
     } else {
       add<RecordType>({
-        businessId: 'id' + new Date(),
-        businessName: businessN,
-        part: thePart,
-        businessKinds: businessK,
+        systemId: 'id' + new Date(),
+        systemName: systemN.trim(),
+        business: theBusiness.trim(),
+        businessKinds: businessK.trim(),
+        systemKinds: systemK.trim(),
         createdAt: +new Date(),
       })
         .then(() => {
@@ -83,9 +154,10 @@ export default function AddModal(props) {
   };
   useEffect(() => {
     if (props.theData && props.isEdit) {
-      setBusinessN(props.theData.businessName);
-      setThePart(props.theData.part);
+      setSystemN(props.theData.systemName);
+      setTheBusiness(props.theData.business);
       setBusinessK(props.theData.businessKinds);
+      setSystemK(props.theData.systemKinds);
     }
   }, [props.theData]);
 
@@ -95,43 +167,49 @@ export default function AddModal(props) {
         <Modal.Body>
           <Row>
             <Col span={1}></Col>
-            <Col span={6}>业务名称</Col>
+            <Col span={6}>系统名称</Col>
             <Col span={12}>
               <Input
                 size="full"
-                value={businessN}
+                value={systemN}
                 onChange={(value, context) => {
-                  setBusinessN(value);
+                  setSystemN(value);
                 }}
-                placeholder="请输入业务名称"
+                placeholder="请输入系统名称"
               />
             </Col>
           </Row>
           <Row>
             <Col span={1}></Col>
-            <Col span={6}>所属部门</Col>
+            <Col span={6}>所属业务</Col>
             <Col span={12}>
-              <Input
-                size="full"
-                value={thePart}
-                onChange={(value, context) => {
-                  setThePart(value);
+              <Select
+                clearable
+                matchButtonWidth
+                appearance="button"
+                placeholder="请选择所属业务"
+                options={businessNameArr}
+                onChange={value => {
+                  handleSelectChange(value, 'theBusiness');
                 }}
-                placeholder="请输入所属部门"
+                size="full"
               />
             </Col>
           </Row>
           <Row>
             <Col span={1}></Col>
-            <Col span={6}>业务大类</Col>
+            <Col span={6}>系统类型</Col>
             <Col span={12}>
-              <Input
-                size="full"
-                value={businessK}
-                onChange={(value, context) => {
-                  setBusinessK(value);
+              <Select
+                clearable
+                matchButtonWidth
+                appearance="button"
+                placeholder="请选择系统类型"
+                options={systemOption}
+                onChange={value => {
+                  handleSelectChange(value, 'systemK');
                 }}
-                placeholder="请输入业务大类"
+                size="full"
               />
             </Col>
           </Row>

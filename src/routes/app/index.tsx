@@ -10,31 +10,37 @@ const { Body, Content } = Layout;
 
 type RecordType = {
   id?: number;
-  businessId?: string;
-  businessName?: string;
-  part?: string;
+  systemId?: string;
+  systemName?: string;
+  business?: string;
   businessKinds?: string;
+  systemKinds?: string;
   addMen?: string;
   createdAt?: string | number;
   editMen?: string;
   editedAt?: string | number;
-  businessPic?: string;
 };
 const crumb = [
   { name: '银行', link: '/main' },
   { name: '应用系统', link: '/app' },
 ];
+const systemKOptions = [
+  { value: 'all', text: '所以类型' },
+  { value: 'otherSys', text: '第三方系统' },
+  { value: 'ownSys', text: '内部系统' },
+];
 const AppPage: React.FC = () => {
   const [dataList, setDataList] = useState<RecordType[]>();
   const [allList, setAllList] = useState<RecordType[]>();
-  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.business);
+  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.app);
 
-  const [businessN, setBusinessN] = useState('');
-  const [selectPart, setSelectPart] = useState('');
+  const [inputOne, setInputOne] = useState('');
+  const [inputTwo, setInputTwo] = useState('');
   const [showModal, setShowModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [checkItem, setCheckItem] = useState([]);
+  const [headerSelect, setHeaderSelect] = useState('all');
 
   // 拉取数据
   const fetchList = () => {
@@ -69,59 +75,65 @@ const AppPage: React.FC = () => {
 
   // 搜索框搜索
   const handleInputChange = (value, attr) => {
-    if (attr === 'businessN') {
-      setBusinessN(value);
+    if (attr === 'inputOne') {
+      setInputOne(value);
     }
-    if (attr === 'selectPart') {
-      setSelectPart(value);
+    if (attr === 'inputTwo') {
+      setInputTwo(value);
     }
   };
+  // 筛选数据
   const filterDataList = (arr: any) => {
     if (!arr) {
       return [];
     }
-    if (businessN.trim() === '' && selectPart.trim() === '') {
+    if (inputOne.trim() === '' && inputTwo.trim() === '' && headerSelect === 'all') {
       return arr;
     }
     let filterArr = [];
-    if (businessN.trim() === '' && selectPart.trim() !== '') {
-      arr.map((item: any) => {
-        if (item.part === selectPart) {
-          filterArr.push(item);
+    let inputOneArr = filterItem(arr, 'systemName', inputOne);
+    let inputTwoArr = filterItem(arr, 'business', inputTwo);
+    let headerSelectArr = filterItem(arr, 'systemKinds', headerSelect);
+    arr.map(item => {
+      if (inputOneArr.indexOf(item) > -1 && inputTwoArr.indexOf(item) > -1 && headerSelectArr.indexOf(item) > -1) {
+        filterArr.push(item);
+      }
+    });
+    return filterArr;
+  };
+  const filterItem = (arr, attr, value) => {
+    if (!arr) {
+      return [];
+    }
+    let newArr = [];
+    if (value.trim() === '' || value.trim() === 'all') {
+      newArr = [...arr];
+    } else {
+      arr.map(item => {
+        if (item[attr] === value) {
+          newArr.push(item);
         }
       });
-      return filterArr;
     }
-
-    if (businessN.trim() !== '' && selectPart.trim() === '') {
-      arr.map((item: any) => {
-        if (item.businessName === businessN) {
-          filterArr.push(item);
-        }
-      });
-      return filterArr;
-    }
-    if (businessN.trim() !== '' && selectPart.trim() !== '') {
-      arr.map((item: any) => {
-        if (item.businessName === businessN && item.part === selectPart) {
-          filterArr.push(item);
-        }
-      });
-      return filterArr;
-    }
+    return newArr;
+  };
+  // 系统类型选择
+  const handleSelectChange = (v): void => {
+    setHeaderSelect(v);
   };
 
   useEffect(() => {
     let arr = filterDataList(allList);
     setDataList([...arr]);
-    console.log(12332112321, businessN, selectPart);
-  }, [businessN, selectPart]);
+  }, [inputOne, inputTwo, headerSelect]);
+
   //表格checkbox被选中
   const handleSelectItems = data => {
     setCheckItem(data);
   };
+
+  // 删除button
   const handleDelete = (): void => {
-    console.log(333, checkItem);
     if (checkItem.length) {
       checkItem.map((item, index) => {
         deleteRecord(Number(item))
@@ -142,58 +154,71 @@ const AppPage: React.FC = () => {
     setModalData(data);
   };
 
-  const parts = [
-    { value: 's1', text: '所属部门1' },
-    { value: 's2', text: '所属部门2' },
-  ];
   const propsConfig = {
     list: dataList,
     columns: [
-      'businessId',
-      'businessName',
-      'part',
+      'systemId',
+      'systemName',
+      'business',
       'businessKinds',
-      // 'process',
-      // 'dataProcess',
+      'systemKinds',
       'addMen',
       'createdAt',
       'editMen',
       'editedAt',
-      'businessPic',
     ],
     left: (
       <Row>
         <Col span={1}></Col>
         <Col span={2}>
           <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            业务名称:
+            系统名称:
           </Button>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Input
-            value={businessN}
+            value={inputOne}
             onChange={(value, context) => {
-              handleInputChange(value, 'businessN');
+              handleInputChange(value, 'inputOne');
 
               console.log(value, context, 1111111111);
             }}
-            placeholder="请输入业务名称进行搜索"
+            placeholder="请输入系统名称进行搜索"
           />
         </Col>
         <Col span={1}></Col>
         <Col span={2}>
           <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            所属部门:
+            所属业务:
           </Button>
         </Col>
-        <Col span={6}>
+        <Col span={4}>
           <Input
-            value={selectPart}
+            value={inputTwo}
             onChange={(value, context) => {
-              handleInputChange(value, 'selectPart');
+              handleInputChange(value, 'inputTwo');
               console.log(value, context);
             }}
-            placeholder="请输入所属部门进行搜索"
+            placeholder="请输入所属业务进行搜索"
+          />
+        </Col>
+        <Col span={1}></Col>
+        <Col span={2}>
+          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
+            系统类型:
+          </Button>
+        </Col>
+        <Col span={4}>
+          <Select
+            clearable
+            matchButtonWidth
+            appearance="button"
+            value={headerSelect}
+            onChange={v => {
+              handleSelectChange(v);
+            }}
+            options={systemKOptions}
+            size="full"
           />
         </Col>
       </Row>
@@ -201,9 +226,9 @@ const AppPage: React.FC = () => {
     right: (
       <>
         <Button type="primary" onClick={onAdd}>
-          新增业务
+          新增系统
         </Button>
-        <Button type="primary" onClick={handleDelete}>
+        <Button type="weak" onClick={handleDelete}>
           删除
         </Button>
       </>
@@ -229,7 +254,12 @@ const AppPage: React.FC = () => {
                 theData={modalData}
                 visible={showModal}
               />
-              <TableCommon {...propsConfig} showPic={handleShowPic} selectItems={handleSelectItems}></TableCommon>
+              <TableCommon
+                {...propsConfig}
+                systemKOptions={systemKOptions}
+                showPic={handleShowPic}
+                selectItems={handleSelectItems}
+              ></TableCommon>
             </Card.Body>
           </Card>
         </Content.Body>
@@ -239,165 +269,3 @@ const AppPage: React.FC = () => {
 };
 
 export default AppPage;
-
-// import TableCommon from '@src/components/tableCommon';
-// import { DBTableName } from '@src/services';
-// import { Button, Card, Input, Layout, message, Select } from '@tencent/tea-component';
-// import React, { useEffect, useState } from 'react';
-// import { useIndexedDB } from 'react-indexed-db';
-// const { Body, Content } = Layout;
-
-// type RecordType = {
-//   id?: number;
-//   systemId?: string;
-//   systemName?: string;
-//   business?: string;
-//   businessKinds?: string;
-//   systemKinds?: string;
-//   addMen?: string;
-//   createdAt?: string | number;
-//   editMen?: string;
-//   editedAt?: string | number;
-// };
-
-// const AppPage: React.FC = () => {
-//   const [dataList, setDataList] = useState<RecordType[]>();
-//   const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.app);
-
-//   const [text, setText] = useState('');
-//   const [selectPart, setSelectPart] = useState(null);
-//   const [selectBusiness, setSelectBusiness] = useState(null);
-
-//   // 拉取数据
-//   const fetchList = () => {
-//     getAll()
-//       .then(data => {
-//         console.log(data, 123);
-//         setDataList(data);
-//       })
-//       .catch(() => {});
-//   };
-
-//   // 首次打开页面加载 第二个参数需要是空数组保证只加载一次
-//   useEffect(() => {
-//     fetchList();
-//   }, []);
-
-//   // 点击添加按钮
-//   const onAdd = () => {
-//     add<RecordType>({
-//       systemId: '系统ID11',
-//       systemName: 'systemName111',
-//       business: 'business111',
-//       businessKinds: 'businessKinds111',
-//       systemKinds: 'systemKinds111',
-//       addMen: 'addMen111',
-//       createdAt: +new Date(),
-//       editMen: 'addMen111',
-//       editedAt: +new Date(),
-//     })
-//       .then(() => {
-//         message.success({ content: '成功' });
-//         fetchList();
-//       })
-//       .catch(err => {
-//         message.error({ content: `失败${err}` });
-//       });
-//   };
-//   const handleDelete = (data: any): void => {
-//     console.log(333, data);
-//     deleteRecord(data.id)
-//       .then(() => {
-//         message.success({ content: '成功' });
-//         fetchList();
-//       })
-//       .catch(err => {
-//         message.error({ content: `失败${err}` });
-//       });
-//   };
-//   // 新增系统
-//   const addSystem = data => {
-//     console.log('addSystem');
-//     onAdd();
-//   };
-//   // 新增分区
-//   const addArea = data => {
-//     console.log('addArea');
-//   };
-//   const parts = [
-//     { value: 's1', text: '所属部门1' },
-//     { value: 's2', text: '所属部门2' },
-//   ];
-//   const businesses = [
-//     { value: 's1', text: '所属业务1' },
-//     { value: 's2', text: '所属业务2' },
-//   ];
-//   const propsConfig = {
-//     list: dataList,
-//     columns: [
-//       'systemId',
-//       'systemName',
-//       'business',
-//       'businessKinds',
-//       'systemKinds',
-//       'addMen',
-//       'createdAt',
-//       'editMen',
-//       'editedAt',
-//     ],
-//     left: (
-//       <>
-//         <Input
-//           value={text}
-//           onChange={(value, context) => {
-//             setText(value);
-//             console.log(value, context);
-//           }}
-//           placeholder="请输入系统名称"
-//         />
-//         <Select
-//           style={{ width: '200px', marginLeft: '20px' }}
-//           appearance="button"
-//           options={parts}
-//           value={selectPart}
-//           onChange={value => setSelectPart(value)}
-//           placeholder="请选择所属部门"
-//         />
-//         <Select
-//           style={{ width: '200px', marginLeft: '20px' }}
-//           appearance="button"
-//           options={businesses}
-//           value={selectBusiness}
-//           onChange={value => setSelectBusiness(value)}
-//           placeholder="请选择所属业务"
-//         />
-//       </>
-//     ),
-//     right: (
-//       <>
-//         <Button type="primary" onClick={addSystem}>
-//           新增系统
-//         </Button>
-//         <Button type="primary" onClick={addArea}>
-//           新增分区
-//         </Button>
-//       </>
-//     ),
-//   };
-//   return (
-//     <Body>
-//       <Content>
-//         <Content.Header title="应用系统"></Content.Header>
-//         <Content.Body>
-//           <Card>
-//             <Card.Body>
-//               <TableCommon {...propsConfig} delete={handleDelete}></TableCommon>
-//             </Card.Body>
-//           </Card>
-//         </Content.Body>
-//       </Content>
-//     </Body>
-//   );
-// };
-
-// export default AppPage;

@@ -32,6 +32,19 @@ export default function AddModal(props) {
     props.close();
     init();
   };
+  const checkSave = () => {
+    if (props.allData) {
+      let arr = [];
+      props.allData.map(item => {
+        arr.push(item.businessName);
+      });
+      if (arr.indexOf(businessN.trim()) > -1) {
+        message.error({ content: '业务名称已存在' });
+        return false;
+      }
+    }
+    return true;
+  };
   const handleSave = () => {
     if (businessN.trim() === '') {
       message.success({ content: '请输入业务名称' });
@@ -45,12 +58,15 @@ export default function AddModal(props) {
       message.success({ content: '请输入业务大类' });
       return;
     }
+    if (!checkSave()) {
+      return;
+    }
     if (props.isEdit) {
       update<RecordType>({
         ...props.theData,
-        businessName: businessN,
-        part: thePart,
-        businessKinds: businessK,
+        businessName: businessN.trim(),
+        part: thePart.trim(),
+        businessKinds: businessK.trim(),
         editedAt: +new Date(),
       })
         .then(() => {
@@ -65,9 +81,9 @@ export default function AddModal(props) {
     } else {
       add<RecordType>({
         businessId: 'id' + new Date(),
-        businessName: businessN,
-        part: thePart,
-        businessKinds: businessK,
+        businessName: businessN.trim(),
+        part: thePart.trim(),
+        businessKinds: businessK.trim(),
         createdAt: +new Date(),
       })
         .then(() => {

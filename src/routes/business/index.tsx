@@ -153,8 +153,6 @@ const BusinessPage: React.FC = () => {
       'businessName',
       'part',
       'businessKinds',
-      // 'process',
-      // 'dataProcess',
       'addMen',
       'createdAt',
       'editMen',
@@ -203,7 +201,7 @@ const BusinessPage: React.FC = () => {
         <Button type="primary" onClick={onAdd}>
           新增业务
         </Button>
-        <Button type="primary" onClick={handleDelete}>
+        <Button type="weak" onClick={handleDelete}>
           删除
         </Button>
       </>
@@ -227,6 +225,7 @@ const BusinessPage: React.FC = () => {
                 isEdit={isEdit}
                 save={handleSave}
                 theData={modalData}
+                allData={dataList}
                 visible={showModal}
               />
               <TableCommon {...propsConfig} showPic={handleShowPic} selectItems={handleSelectItems}></TableCommon>
