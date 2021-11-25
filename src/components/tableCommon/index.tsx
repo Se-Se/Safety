@@ -96,6 +96,10 @@ const TableCommon: React.FC<any> = props => {
 
       // scenes
       {
+        key: 'scenesId',
+        header: '攻击场景id',
+      },
+      {
         key: 'sceneName',
         header: '场景名称',
       },
@@ -180,6 +184,10 @@ const TableCommon: React.FC<any> = props => {
         key: 'action',
         header: '操作',
       },
+      {
+        key: 'show',
+        header: '操作',
+      },
       ///////////////////////////////////////////////////
     ];
     let arr = [];
@@ -225,6 +233,21 @@ const TableCommon: React.FC<any> = props => {
               onClick={ev => {
                 ev.stopPropagation();
                 props.showPic(record);
+              }}
+            >
+              查看
+            </Button>
+          );
+        };
+      }
+      if (item.key === 'show') {
+        item.render = record => {
+          return (
+            <Button
+              type="link"
+              onClick={ev => {
+                ev.stopPropagation();
+                props.show(record);
               }}
             >
               查看

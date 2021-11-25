@@ -122,9 +122,11 @@ export const DBConfig = {
       store: DBTableName.scenes,
       storeConfig: { keyPath: 'id', autoIncrement: true },
       storeSchema: [
-        { name: 'name', keypath: 'name', options: { unique: false } },
-        { name: 'type', keypath: 'type', options: { unique: false } },
-        { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
+        { name: 'scenesId', keypath: 'scenesId', options: { unique: false } },
+        { name: 'sceneName', keypath: 'sceneName', options: { unique: false } },
+        { name: 'strategy', keypath: 'strategy', options: { unique: false } },
+        { name: 'attackObject', keypath: 'attackObject', options: { unique: false } },
+        { name: 'loseEffect', keypath: 'loseEffect', options: { unique: false } },
       ],
     },
 
