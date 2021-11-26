@@ -110,6 +110,14 @@ const ScenesPage: React.FC = () => {
     setShowModal(true);
   };
 
+  // 点击编辑按钮
+  const handleEdit = data => {
+    console.log(data);
+    setModalData({ ...data });
+    setIsEdit(true);
+    setShowModal(true);
+  };
+
   //表格checkbox被选中
   const handleSelectItems = data => {
     setCheckItem(data);
@@ -137,9 +145,8 @@ const ScenesPage: React.FC = () => {
   };
   const propsConfig = {
     list: dataList,
-    columns: ['scenesId', 'sceneName', 'strategy', 'attackObject', 'loseEffect', 'show'],
-    left: <></>,
-    right: (
+    columns: ['scenesId', 'sceneName', 'strategy', 'attackObject', 'loseEffect', 'show', 'action'],
+    left: (
       <>
         <Button type="primary" onClick={onAdd}>
           新增系统
@@ -174,7 +181,12 @@ const ScenesPage: React.FC = () => {
                 comName={'scenes'}
                 trade={trade}
               />
-              <TableCommon {...propsConfig} selectItems={handleSelectItems} show={handleShow}></TableCommon>
+              <TableCommon
+                {...propsConfig}
+                onEdit={handleEdit}
+                selectItems={handleSelectItems}
+                show={handleShow}
+              ></TableCommon>
             </Card.Body>
           </Card>
         </Content.Body>

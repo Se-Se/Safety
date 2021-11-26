@@ -1,7 +1,7 @@
 import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Col, Input, Layout, message, Row, Select } from '@tencent/tea-component';
+import { Button, Card, Col, Input, Layout, message, Select, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import AddModal from './components/addModal';
@@ -13,7 +13,7 @@ const { Body, Content } = Layout;
 type GapType = {
   id?: number;
   gapId?: string;
-  propertyAndSystem?: string;
+  propertyOrSystem?: string;
   business?: string;
   businessKinds?: string;
   part?: string;
@@ -29,10 +29,10 @@ const crumb = [
   { name: '银行', link: '/main' },
   { name: '攻击手法与漏洞', link: '/gap' },
 ];
-const systemKOptions = [
+const systemOrPropertyOption = [
   { value: 'all', text: '所以类型' },
-  { value: 'otherSys', text: '第三方系统' },
-  { value: 'ownSys', text: '内部系统' },
+  { value: 'system', text: '系统' },
+  { value: 'property', text: '资产' },
 ];
 const GapPage: React.FC = () => {
   const [dataList, setDataList] = useState<GapType[]>();
@@ -46,8 +46,31 @@ const GapPage: React.FC = () => {
   const [showModal, setShowModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
   const [modalData, setModalData] = useState(null);
-  const [checkItem, setCheckItem] = useState([]);
   const [headerSelect, setHeaderSelect] = useState('all');
+
+  const [appData, setAppData] = useState([]);
+  const [propertyData, setPropertyData] = useState([]);
+
+  // 拉取应用系统数据
+  const getAppData = () => {
+    const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.app);
+    getAll()
+      .then(data => {
+        const arr = filterTheTrade(data, 'safetyTrade', trade);
+        setAppData([...arr]);
+      })
+      .catch(() => {});
+  };
+  // 拉取网络资产数据
+  const getPropertyData = () => {
+    const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.property);
+    getAll()
+      .then(data => {
+        const arr = filterTheTrade(data, 'safetyTrade', trade);
+        setPropertyData([...arr]);
+      })
+      .catch(() => {});
+  };
 
   // 拉取数据
   const fetchList = () => {
@@ -72,12 +95,6 @@ const GapPage: React.FC = () => {
 
   const handleSave = () => {
     fetchList();
-  };
-
-  // 点击添加按钮
-  const onAdd = () => {
-    setIsEdit(false);
-    setShowModal(true);
   };
 
   const handleEdit = data => {
@@ -140,35 +157,9 @@ const GapPage: React.FC = () => {
     setDataList([...arr]);
   }, [inputOne, inputTwo, headerSelect]);
 
-  //表格checkbox被选中
-  const handleSelectItems = data => {
-    setCheckItem(data);
-  };
-
-  // 删除button
-  const handleDelete = (): void => {
-    if (checkItem.length) {
-      checkItem.map((item, index) => {
-        deleteRecord(Number(item))
-          .then(() => {
-            if (index === checkItem.length - 1) {
-              message.success({ content: '成功' });
-              fetchList();
-            }
-          })
-          .catch(err => {
-            message.error({ content: `失败${err}` });
-          });
-      });
-    }
-  };
-  const handleShowPic = (data): void => {
-    console.log(111, data);
-    setModalData(data);
-  };
-
   const propsConfig = {
     list: dataList,
+    notSelectable: true,
     columns: [
       'gapId',
       'propertyAndSystem',
@@ -183,73 +174,41 @@ const GapPage: React.FC = () => {
       'theBug',
       'action',
     ],
-    left: (
-      <Row>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            名称:
-          </Button>
-        </Col>
-        <Col span={4}>
-          <Input
-            value={inputOne}
-            onChange={(value, context) => {
-              handleInputChange(value, 'inputOne');
-
-              console.log(value, context, 1111111111);
-            }}
-            placeholder="请输入系统名称进行搜索"
-          />
-        </Col>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            所属部门:
-          </Button>
-        </Col>
-        <Col span={4}>
-          <Input
-            value={inputTwo}
-            onChange={(value, context) => {
-              handleInputChange(value, 'inputTwo');
-              console.log(value, context);
-            }}
-            placeholder="请输入所属业务进行搜索"
-          />
-        </Col>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            分类:
-          </Button>
-        </Col>
-        <Col span={4}>
-          <Select
-            clearable
-            matchButtonWidth
-            appearance="button"
-            value={headerSelect}
-            onChange={v => {
-              handleSelectChange(v);
-            }}
-            options={systemKOptions}
-            size="full"
-          />
-        </Col>
-      </Row>
-    ),
     right: (
       <>
-        <Button type="primary" onClick={onAdd}>
-          新增系统
-        </Button>
-        <Button type="primary" onClick={handleEdit}>
-          编辑
-        </Button>
-        <Button type="weak" onClick={handleDelete}>
-          删除
-        </Button>
+        <SearchBox
+          value={inputOne}
+          className="margin-r-30"
+          onChange={(value, context) => {
+            handleInputChange(value, 'inputOne');
+
+            console.log(value, context, 1111111111);
+          }}
+          placeholder="请输入系统/资产名称"
+        />
+
+        <SearchBox
+          value={inputTwo}
+          className="margin-r-30"
+          onChange={(value, context) => {
+            handleInputChange(value, 'inputTwo');
+            console.log(value, context);
+          }}
+          placeholder="请输入所属部门"
+        />
+
+        <Select
+          size="m"
+          clearable
+          matchButtonWidth
+          appearance="button"
+          value={headerSelect}
+          placeholder="分类"
+          onChange={v => {
+            handleSelectChange(v);
+          }}
+          options={systemOrPropertyOption}
+        />
       </>
     ),
   };
@@ -275,13 +234,7 @@ const GapPage: React.FC = () => {
                 visible={showModal}
                 trade={trade}
               />
-              <TableCommon
-                {...propsConfig}
-                systemKOptions={systemKOptions}
-                showPic={handleShowPic}
-                onEdit={handleEdit}
-                selectItems={handleSelectItems}
-              ></TableCommon>
+              <TableCommon {...propsConfig} onEdit={handleEdit}></TableCommon>
             </Card.Body>
           </Card>
         </Content.Body>

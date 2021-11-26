@@ -198,7 +198,7 @@ const TableCommon: React.FC<any> = props => {
       },
       {
         key: 'show',
-        header: '操作',
+        header: '查看攻击路线图',
       },
       ///////////////////////////////////////////////////
     ];
@@ -249,6 +249,7 @@ const TableCommon: React.FC<any> = props => {
           return (
             <Button
               type="link"
+              style={{ marginLeft: '30px' }}
               onClick={ev => {
                 ev.stopPropagation();
                 props.show(record);
@@ -286,18 +287,19 @@ const TableCommon: React.FC<any> = props => {
         columns={arr}
         addons={[
           pageable(),
-          selectable({
-            value: selectedKeys,
-            onChange: (keys, context) => {
-              console.log(keys, context);
-              props.selectItems(keys);
-              setSelectedKeys(keys);
-            },
-            rowSelect: true,
-            render: (element, { disabled }) => {
-              return disabled ? <Icon type="loading" /> : element;
-            },
-          }),
+          !props.notSelectable &&
+            selectable({
+              value: selectedKeys,
+              onChange: (keys, context) => {
+                console.log(keys, context);
+                props.selectItems(keys);
+                setSelectedKeys(keys);
+              },
+              rowSelect: true,
+              render: (element, { disabled }) => {
+                return disabled ? <Icon type="loading" /> : element;
+              },
+            }),
         ]}
         className="common-table"
       />

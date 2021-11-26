@@ -45,7 +45,7 @@ export const DBConfig = {
     },
     {
       store: DBTableName.app,
-      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeConfig: { keyPath: 'systemId' },
       storeSchema: [
         { name: 'systemId', keypath: 'systemId', options: { unique: false } },
         { name: 'systemName', keypath: 'systemName', options: { unique: false } },
@@ -56,6 +56,7 @@ export const DBConfig = {
         { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
         { name: 'editMen', keypath: 'editMen', options: { unique: false } },
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
+        { name: 'part', keypath: 'part', options: { unique: false } },
         { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
       ],
     },
@@ -141,10 +142,10 @@ export const DBConfig = {
 
     {
       store: DBTableName.gap,
-      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeConfig: { keyPath: 'gapId', autoIncrement: true },
       storeSchema: [
         { name: 'gapId', keypath: 'gapId', options: { unique: false } },
-        { name: 'propertyAndSystem', keypath: 'propertyAndSystem', options: { unique: false } },
+        { name: 'propertyOrSystem', keypath: 'propertyOrSystem', options: { unique: false } },
         { name: 'business', keypath: 'business', options: { unique: false } },
         { name: 'businessKinds', keypath: 'businessKinds', options: { unique: false } },
         { name: 'part', keypath: 'part', options: { unique: false } },

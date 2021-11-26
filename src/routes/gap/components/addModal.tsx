@@ -8,7 +8,7 @@ const { TextArea } = Input;
 type GapType = {
   id?: number;
   gapId?: string;
-  propertyAndSystem?: string;
+  propertyOrSystem?: string;
   business?: string;
   businessKinds?: string;
   part?: string;
@@ -35,30 +35,10 @@ type Business = {
 };
 
 export default function AddModal(props) {
-  const { add, update } = useIndexedDB(DBTableName.gap);
-  const { getAll } = useIndexedDB(DBTableName.business);
-  const [businessData, setBusinessData] = useState<Business[]>();
-
+  const { update } = useIndexedDB(DBTableName.gap);
   const [theName, setTheName] = useState('');
   const [theActType, setTheActType] = useState('');
   const [theTheBug, setTheTheBug] = useState('');
-  const [businessNameArr, setBusinessNameArr] = useState([]);
-
-  // 拉取数据
-  const fetchList = () => {
-    getAll()
-      .then(data => {
-        const arr = filterTheTrade(data, 'safetyTrade', props.trade);
-        setBusinessData([...arr]);
-      })
-      .catch(() => {});
-  };
-  // 首次打开页面加载
-  useEffect(() => {
-    if (props.visible) {
-      fetchList();
-    }
-  }, [props.visible]);
 
   const init = () => {
     setTheName('');
@@ -66,7 +46,6 @@ export default function AddModal(props) {
     setTheTheBug('');
   };
   const close = () => {
-    console.log(1111111);
     props.close();
     init();
   };
@@ -93,40 +72,10 @@ export default function AddModal(props) {
     if (props.isEdit) {
       update<GapType>({
         ...props.theData,
-        propertyAndSystem: theName.trim(),
-        business: 'theBusiness',
-        businessKinds: 'businessKinds',
-        part: 'part',
-        categorys: 'categorys',
-        theType: 'theType',
-        editMen: '王翰',
+        editMen: 'shanehwang',
         editedAt: +new Date(),
         actType: theActType.trim(),
         theBug: theTheBug.trim(),
-      })
-        .then(() => {
-          message.success({ content: '成功' });
-          props.close();
-          props.save();
-          init();
-        })
-        .catch(err => {
-          message.error({ content: `失败${err}` });
-        });
-    } else {
-      add<GapType>({
-        gapId: 'gap_id' + new Date().getTime(),
-        propertyAndSystem: theName.trim(),
-        business: 'theBusiness',
-        businessKinds: 'businessKinds',
-        part: 'part',
-        categorys: 'categorys',
-        theType: 'theType',
-        editMen: '王翰',
-        editedAt: +new Date(),
-        actType: theActType.trim(),
-        theBug: theTheBug.trim(),
-        safetyTrade: props.trade,
       })
         .then(() => {
           message.success({ content: '成功' });
@@ -141,6 +90,7 @@ export default function AddModal(props) {
   };
   useEffect(() => {
     if (props.theData && props.isEdit) {
+      setTheName(props.theData.actType);
       setTheActType(props.theData.actType);
       setTheTheBug(props.theData.theBug);
     }
@@ -148,16 +98,19 @@ export default function AddModal(props) {
 
   return (
     <>
-      <Modal maskClosable visible={props.visible} className="main-modal" disableCloseIcon={true} onClose={close}>
+      <Modal maskClosable visible={props.visible} className="main-modal " disableCloseIcon={true} onClose={close}>
         <Modal.Body>
           <Row>
             <Col span={1}></Col>
-            <Col span={6}>系统名称</Col>
+            <Col span={6} style={{ verticalAlign: 'middle' }}>
+              系统名称 ：
+            </Col>
             <Col span={12}>
               <Input
+                readOnly
                 size="full"
                 value={theName}
-                onChange={(value, context) => {
+                onChange={value => {
                   setTheName(value);
                 }}
                 placeholder="请输入系统名称"
@@ -166,7 +119,9 @@ export default function AddModal(props) {
           </Row>
           <Row>
             <Col span={1}></Col>
-            <Col span={6}>攻击手法</Col>
+            <Col span={6} style={{ verticalAlign: 'middle' }}>
+              攻击手法 ：
+            </Col>
             <Col span={12}>
               <TextArea
                 showCount
@@ -181,7 +136,7 @@ export default function AddModal(props) {
           </Row>
           <Row>
             <Col span={1}></Col>
-            <Col span={6}>漏洞</Col>
+            <Col span={6}>漏洞 ：</Col>
             <Col span={12}>
               <TextArea
                 showCount

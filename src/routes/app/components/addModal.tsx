@@ -30,6 +30,21 @@ type Business = {
   businessPic?: string;
   safetyTrade?: string;
 };
+type GapType = {
+  id?: number;
+  gapId?: string;
+  propertyOrSystem?: string;
+  business?: string;
+  businessKinds?: string;
+  part?: string;
+  categorys?: string;
+  theType?: string;
+  editMen?: string;
+  editedAt?: string | number;
+  actType?: string;
+  theBug?: string;
+  safetyTrade?: string;
+};
 
 const systemOption = [
   { value: 'otherSys', text: '第三方系统' },
@@ -44,6 +59,7 @@ export default function AddModal(props) {
   const [systemN, setSystemN] = useState('');
   const [theBusiness, setTheBusiness] = useState('');
   const [businessK, setBusinessK] = useState('');
+  const [thePart, setThePart] = useState('');
   const [systemK, setSystemK] = useState('');
   const [businessNameArr, setBusinessNameArr] = useState([]);
 
@@ -86,6 +102,7 @@ export default function AddModal(props) {
       businessData.map(item => {
         if (item.businessName === v) {
           setBusinessK(item.businessKinds);
+          setThePart(item.part);
         }
       });
     }
@@ -98,6 +115,7 @@ export default function AddModal(props) {
     setTheBusiness('');
     setBusinessK('');
     setSystemK('');
+    setThePart('');
   };
   const close = () => {
     console.log(1111111);
@@ -137,7 +155,7 @@ export default function AddModal(props) {
       return;
     }
     if (props.isEdit) {
-      update<RecordType>({
+      let request = {
         ...props.theData,
         systemName: systemN.trim(),
         business: theBusiness.trim(),
@@ -145,9 +163,11 @@ export default function AddModal(props) {
         systemKinds: systemK.trim(),
         editMen: 'shanehwang',
         editedAt: +new Date(),
-      })
+      };
+      update<RecordType>(request)
         .then(() => {
           message.success({ content: '成功' });
+
           props.close();
           props.save();
           init();
@@ -156,16 +176,18 @@ export default function AddModal(props) {
           message.error({ content: `失败${err}` });
         });
     } else {
-      add<RecordType>({
+      let request = {
         systemId: 'app_id' + new Date().getTime(),
         systemName: systemN.trim(),
         business: theBusiness.trim(),
         businessKinds: businessK.trim(),
+        part: thePart.trim(),
         systemKinds: systemK.trim(),
         addMen: 'shanehwang',
         createdAt: +new Date(),
         safetyTrade: props.trade,
-      })
+      };
+      add<RecordType>(request)
         .then(() => {
           message.success({ content: '成功' });
           props.close();
@@ -183,6 +205,7 @@ export default function AddModal(props) {
       setTheBusiness(props.theData.business);
       setBusinessK(props.theData.businessKinds);
       setSystemK(props.theData.systemKinds);
+      setThePart(props.theData.part);
     }
   }, [props.theData]);
 
