@@ -2,6 +2,7 @@ import { DBTableName } from '@src/services';
 import { Button, Col, Input, message, Modal, Row } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
+import { filterTheTrade } from '@src/utils/util';
 const { TextArea } = Input;
 
 type GapType = {
@@ -17,6 +18,7 @@ type GapType = {
   editedAt?: string | number;
   actType?: string;
   theBug?: string;
+  safetyTrade?: string;
 };
 type Business = {
   id?: number;
@@ -29,12 +31,8 @@ type Business = {
   editMen?: string;
   editedAt?: string | number;
   businessPic?: string;
+  safetyTrade?: string;
 };
-
-const systemOption = [
-  { value: 'otherSys', text: '第三方系统' },
-  { value: 'ownSys', text: '内部系统' },
-];
 
 export default function AddModal(props) {
   const { add, update } = useIndexedDB(DBTableName.gap);
@@ -50,7 +48,8 @@ export default function AddModal(props) {
   const fetchList = () => {
     getAll()
       .then(data => {
-        setBusinessData(data);
+        const arr = filterTheTrade(data, 'safetyTrade', props.trade);
+        setBusinessData([...arr]);
       })
       .catch(() => {});
   };
@@ -127,6 +126,7 @@ export default function AddModal(props) {
         editedAt: +new Date(),
         actType: theActType.trim(),
         theBug: theTheBug.trim(),
+        safetyTrade: props.trade,
       })
         .then(() => {
           message.success({ content: '成功' });

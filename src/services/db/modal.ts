@@ -40,6 +40,7 @@ export const DBConfig = {
         { name: 'editMen', keypath: 'editMen', options: { unique: false } },
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
         { name: 'businessPic', keypath: 'businessPic', options: { unique: false } },
+        { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
       ],
     },
     {
@@ -55,6 +56,7 @@ export const DBConfig = {
         { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
         { name: 'editMen', keypath: 'editMen', options: { unique: false } },
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
+        { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
       ],
     },
     {
@@ -78,6 +80,7 @@ export const DBConfig = {
         { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
         { name: 'editMen', keypath: 'editMen', options: { unique: false } },
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
+        { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
       ],
     },
     {
@@ -94,6 +97,7 @@ export const DBConfig = {
         { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
         { name: 'editMen', keypath: 'editMen', options: { unique: false } },
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
+        { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
       ],
     },
     {
@@ -107,6 +111,7 @@ export const DBConfig = {
         { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
         { name: 'editMen', keypath: 'editMen', options: { unique: false } },
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
+        { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
       ],
     },
     {
@@ -116,6 +121,7 @@ export const DBConfig = {
         { name: 'name', keypath: 'name', options: { unique: false } },
         { name: 'type', keypath: 'type', options: { unique: false } },
         { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },
+        { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
       ],
     },
     {
@@ -127,6 +133,7 @@ export const DBConfig = {
         { name: 'strategy', keypath: 'strategy', options: { unique: false } },
         { name: 'attackObject', keypath: 'attackObject', options: { unique: false } },
         { name: 'loseEffect', keypath: 'loseEffect', options: { unique: false } },
+        { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
       ],
     },
 
@@ -145,6 +152,7 @@ export const DBConfig = {
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
         { name: 'actType', keypath: 'actType', options: { unique: false } },
         { name: 'theBug', keypath: 'theBug', options: { unique: false } },
+        { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
       ],
     },
   ],

@@ -5,6 +5,8 @@ import { Button, Card, Col, Input, Layout, message, Row, Select } from '@tencent
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import AddModal from './components/addModal';
+import { filterTheTrade } from '@src/utils/util';
+import cookie from 'react-cookies';
 
 const { Body, Content } = Layout;
 
@@ -21,10 +23,11 @@ type GapType = {
   editedAt?: string | number;
   actType?: string;
   theBug?: string;
+  safetyTrade?: string;
 };
 const crumb = [
   { name: '银行', link: '/main' },
-  { name: '应用系统', link: '/app' },
+  { name: '攻击手法与漏洞', link: '/gap' },
 ];
 const systemKOptions = [
   { value: 'all', text: '所以类型' },
@@ -35,6 +38,8 @@ const GapPage: React.FC = () => {
   const [dataList, setDataList] = useState<GapType[]>();
   const [allList, setAllList] = useState<GapType[]>();
   const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.gap);
+  const val = cookie.load('safetyTrade');
+  const [trade, setTrade] = useState(val);
 
   const [inputOne, setInputOne] = useState('');
   const [inputTwo, setInputTwo] = useState('');
@@ -48,9 +53,9 @@ const GapPage: React.FC = () => {
   const fetchList = () => {
     getAll()
       .then(data => {
-        console.log(data, 123);
-        setDataList(data);
-        setAllList(data);
+        const arr = filterTheTrade(data, 'safetyTrade', trade);
+        setDataList([...arr]);
+        setAllList([...arr]);
       })
       .catch(() => {});
   };
@@ -268,6 +273,7 @@ const GapPage: React.FC = () => {
                 theData={modalData}
                 allData={dataList}
                 visible={showModal}
+                trade={trade}
               />
               <TableCommon
                 {...propsConfig}

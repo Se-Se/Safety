@@ -5,6 +5,8 @@ import { Button, Card, Cascader, Col, Input, Layout, message, Row } from '@tence
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import AddModal from './components/addModal';
+import { filterTheTrade } from '@src/utils/util';
+import cookie from 'react-cookies';
 
 const { Body, Content } = Layout;
 
@@ -65,6 +67,7 @@ type PropertyType = {
   createdAt?: string | number;
   editMen?: string;
   editedAt?: string | number;
+  safetyTrade?: string;
 };
 const crumb = [
   { name: '银行', link: '/main' },
@@ -79,6 +82,8 @@ const PropertyPage: React.FC = () => {
   const [dataList, setDataList] = useState<PropertyType[]>();
   const [allList, setAllList] = useState<PropertyType[]>();
   const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.property);
+  const val = cookie.load('safetyTrade');
+  const [trade, setTrade] = useState(val);
 
   const [inputOne, setInputOne] = useState('');
   const [inputTwo, setInputTwo] = useState('');
@@ -94,8 +99,10 @@ const PropertyPage: React.FC = () => {
     getAll()
       .then(data => {
         console.log(data, 123);
-        setDataList(data);
-        setAllList(data);
+        const arr = filterTheTrade(data, 'safetyTrade', trade);
+        console.log(arr, 55555555);
+        setDataList([...arr]);
+        setAllList([...arr]);
       })
       .catch(() => {});
   };
@@ -321,6 +328,7 @@ const PropertyPage: React.FC = () => {
                 visible={showModal}
                 propertyOption={propertyOption}
                 comName={'property'}
+                trade={trade}
               />
               <TableCommon {...propsConfig} selectItems={handleSelectItems}></TableCommon>
             </Card.Body>

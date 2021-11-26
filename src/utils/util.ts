@@ -33,3 +33,13 @@ export const isNumber = (str: any) => {
   }
   return true;
 };
+
+//筛选数组
+export const filterTheTrade = (arr: any, attr: string, value: any) => {
+  if (!arr) {
+    return [];
+  }
+  return arr.filter(item => {
+    return item[attr] === value;
+  });
+};

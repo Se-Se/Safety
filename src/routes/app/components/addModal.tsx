@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Row, Col, Input, message, Select } from '@tencent/tea-component';
-import { useIndexedDB } from 'react-indexed-db';
 import { DBTableName } from '@src/services';
+import { Button, Col, Input, message, Modal, Row, Select } from '@tencent/tea-component';
+import React, { useEffect, useState } from 'react';
+import { useIndexedDB } from 'react-indexed-db';
+import { filterTheTrade } from '@src/utils/util';
 
 type RecordType = {
   id?: number;
@@ -14,6 +15,7 @@ type RecordType = {
   createdAt?: string | number;
   editMen?: string;
   editedAt?: string | number;
+  safetyTrade?: string;
 };
 type Business = {
   id?: number;
@@ -26,6 +28,7 @@ type Business = {
   editMen?: string;
   editedAt?: string | number;
   businessPic?: string;
+  safetyTrade?: string;
 };
 
 const systemOption = [
@@ -48,8 +51,9 @@ export default function AddModal(props) {
   const fetchList = () => {
     getAll()
       .then(data => {
-        getSelecOptions(data);
-        setBusinessData(data);
+        const arr = filterTheTrade(data, 'safetyTrade', props.trade);
+        getSelecOptions([...arr]);
+        setBusinessData([...arr]);
       })
       .catch(() => {});
   };
@@ -63,7 +67,6 @@ export default function AddModal(props) {
     if (!data) {
       return;
     }
-
     const theNameArr = [];
     data.map(item => {
       const obj: any = {};
@@ -160,6 +163,7 @@ export default function AddModal(props) {
         businessKinds: businessK.trim(),
         systemKinds: systemK.trim(),
         createdAt: +new Date(),
+        safetyTrade: props.trade,
       })
         .then(() => {
           message.success({ content: '成功' });

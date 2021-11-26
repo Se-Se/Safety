@@ -5,6 +5,8 @@ import { Button, Card, Layout, message } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import AddModal from './components/addModal';
+import { filterTheTrade } from '@src/utils/util';
+import cookie from 'react-cookies';
 
 const { Body, Content } = Layout;
 const propertyOption = [
@@ -59,6 +61,7 @@ type ScenesType = {
   strategy?: string;
   attackObject?: string;
   loseEffect?: string;
+  safetyTrade?: string;
 };
 const crumb = [
   { name: '银行', link: '/main' },
@@ -68,6 +71,8 @@ const crumb = [
 const ScenesPage: React.FC = () => {
   const [dataList, setDataList] = useState<ScenesType[]>();
   const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.scenes);
+  const val = cookie.load('safetyTrade');
+  const [trade, setTrade] = useState(val);
 
   const [showModal, setShowModal] = useState(false);
   const [isEdit, setIsEdit] = useState(false);
@@ -79,7 +84,8 @@ const ScenesPage: React.FC = () => {
     getAll()
       .then(data => {
         console.log(data, 123);
-        setDataList(data);
+        const arr = filterTheTrade(data, 'safetyTrade', trade);
+        setDataList([...arr]);
       })
       .catch(() => {});
   };
@@ -166,6 +172,7 @@ const ScenesPage: React.FC = () => {
                 visible={showModal}
                 propertyOption={propertyOption}
                 comName={'scenes'}
+                trade={trade}
               />
               <TableCommon {...propsConfig} selectItems={handleSelectItems} show={handleShow}></TableCommon>
             </Card.Body>
@@ -177,94 +184,3 @@ const ScenesPage: React.FC = () => {
 };
 
 export default ScenesPage;
-
-// import TableCommon from '@src/components/tableCommon';
-// import { DBTableName } from '@src/services';
-// import { Button, Card, Layout, message } from '@tencent/tea-component';
-// import React, { useEffect, useState } from 'react';
-// import { useIndexedDB } from 'react-indexed-db';
-// const { Body, Content } = Layout;
-
-// type RecordType = {
-//   id?: number;
-//   sceneName?: string;
-//   strategy?: string;
-//   attackObject?: string;
-//   loseEffect?: string;
-//   createdAt?: string | number;
-// };
-
-// const ScenesPage: React.FC = () => {
-//   const [dataList, setDataList] = useState<RecordType[]>();
-//   const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.scenes);
-
-//   // 拉取数据
-//   const fetchList = () => {
-//     getAll()
-//       .then(data => {
-//         console.log(data, 123);
-//         setDataList(data);
-//       })
-//       .catch(() => {});
-//   };
-
-//   // 首次打开页面加载 第二个参数需要是空数组保证只加载一次
-//   useEffect(() => {
-//     fetchList();
-//   }, []);
-
-//   // 点击添加按钮
-//   const onAdd = () => {
-//     add<RecordType>({
-//       sceneName: 'sceneName1',
-//       strategy: 'strategy1.',
-//       attackObject: 'attackObject1',
-//       loseEffect: 'loseEffect1',
-//       createdAt: +new Date(),
-//     })
-//       .then(() => {
-//         message.success({ content: '成功' });
-//         fetchList();
-//       })
-//       .catch(err => {
-//         message.error({ content: `失败${err}` });
-//       });
-//   };
-//   const handleDelete = (data: any): void => {
-//     console.log(333, data);
-//     deleteRecord(data.id)
-//       .then(() => {
-//         message.success({ content: '成功' });
-//         fetchList();
-//       })
-//       .catch(err => {
-//         message.error({ content: `失败${err}` });
-//       });
-//   };
-//   const propsConfig = {
-//     list: dataList,
-//     columns: ['sceneName', 'strategy', 'attackObject', 'loseEffect', 'action'],
-
-//     right: (
-//       <Button type="primary" onClick={onAdd}>
-//         添加
-//       </Button>
-//     ),
-//   };
-//   return (
-//     <Body>
-//       <Content>
-//         <Content.Header title="攻击场景"></Content.Header>
-//         <Content.Body>
-//           <Card>
-//             <Card.Body>
-//               <TableCommon {...propsConfig} delete={handleDelete}></TableCommon>
-//             </Card.Body>
-//           </Card>
-//         </Content.Body>
-//       </Content>
-//     </Body>
-//   );
-// };
-
-// export default ScenesPage;

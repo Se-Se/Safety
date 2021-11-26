@@ -2,6 +2,7 @@ import { DBTableName } from '@src/services';
 import { Button, Col, Input, message, Modal, Row, Select } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
+import { filterTheTrade } from '@src/utils/util';
 
 type AppType = {
   id?: number;
@@ -14,6 +15,7 @@ type AppType = {
   createdAt?: string | number;
   editMen?: string;
   editedAt?: string | number;
+  safetyTrade?: string;
 };
 type DataType = {
   id?: number;
@@ -25,6 +27,7 @@ type DataType = {
   createdAt?: string | number;
   editMen?: string;
   editedAt?: string | number;
+  safetyTrade?: string;
 };
 
 const systemOption = [
@@ -47,8 +50,9 @@ export default function AddModal(props) {
   const fetchList = () => {
     getAll()
       .then(data => {
-        getSelecOptions(data);
-        setTableData(data);
+        const arr = filterTheTrade(data, 'safetyTrade', props.trade);
+        getSelecOptions([...arr]);
+        setTableData([...arr]);
       })
       .catch(() => {});
   };
@@ -130,7 +134,7 @@ export default function AddModal(props) {
         dataName: theName.trim(),
         systemPart: belongSelect.trim(),
         systemKinds: belongField.trim(),
-        editMen: 'editMan',
+        editMen: '王翰',
         editedAt: +new Date(),
       })
         .then(() => {
@@ -148,8 +152,9 @@ export default function AddModal(props) {
         dataName: theName.trim(),
         systemPart: belongSelect.trim(),
         systemKinds: belongField.trim(),
-        addMen: 'addMen',
+        addMen: '王翰',
         createdAt: +new Date(),
+        safetyTrade: props.trade,
       })
         .then(() => {
           message.success({ content: '成功' });

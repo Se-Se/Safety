@@ -1,21 +1,11 @@
-import React, { useState, useEffect } from 'react';
-import {
-  Card,
-  ExternalLink,
-  Layout,
-  RegionOption,
-  RegionPanel,
-  RegionSelect,
-  Button,
-  Row,
-  Col,
-} from '@tencent/tea-component';
 import ManiItem from '@src/components/main/mainItem';
 import MainModal from '@src/routes/main/components/addModal';
-import { useIndexedDB } from 'react-indexed-db';
 import { DBTableName } from '@src/services';
-import cookie from 'react-cookies';
 import { useHistory } from '@tea/app';
+import { Button, Card, Col, Layout, Row } from '@tencent/tea-component';
+import React, { useEffect, useState } from 'react';
+import cookie from 'react-cookies';
+import { useIndexedDB } from 'react-indexed-db';
 
 const { Body, Content } = Layout;
 
@@ -67,7 +57,7 @@ const MainPage: React.FC = () => {
     setIsEdit(true);
   };
   const choseTrade = (ev: any, item: any) => {
-    cookie.save('theTrade', item.tradeN);
+    cookie.save('safetyTrade', item.tradeN);
     history.push('/business');
   };
   return (

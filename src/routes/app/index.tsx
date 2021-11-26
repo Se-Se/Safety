@@ -1,10 +1,12 @@
+import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Input, Layout, message, Select, Row, Col } from '@tencent/tea-component';
+import { Button, Card, Col, Input, Layout, message, Row, Select } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
-import BreadcrumbPage from '@src/components/crumb';
 import AddModal from './components/addModal';
+import { filterTheTrade } from '@src/utils/util';
+import cookie from 'react-cookies';
 
 const { Body, Content } = Layout;
 
@@ -19,6 +21,7 @@ type RecordType = {
   createdAt?: string | number;
   editMen?: string;
   editedAt?: string | number;
+  safetyTrade?: string;
 };
 const crumb = [
   { name: '银行', link: '/main' },
@@ -33,6 +36,8 @@ const AppPage: React.FC = () => {
   const [dataList, setDataList] = useState<RecordType[]>();
   const [allList, setAllList] = useState<RecordType[]>();
   const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.app);
+  const val = cookie.load('safetyTrade');
+  const [trade, setTrade] = useState(val);
 
   const [inputOne, setInputOne] = useState('');
   const [inputTwo, setInputTwo] = useState('');
@@ -47,8 +52,10 @@ const AppPage: React.FC = () => {
     getAll()
       .then(data => {
         console.log(data, 123);
-        setDataList(data);
-        setAllList(data);
+        const arr = filterTheTrade(data, 'safetyTrade', trade);
+        console.log(arr, 55555555);
+        setDataList([...arr]);
+        setAllList([...arr]);
       })
       .catch(() => {});
   };
@@ -254,6 +261,7 @@ const AppPage: React.FC = () => {
                 theData={modalData}
                 allData={dataList}
                 visible={showModal}
+                trade={trade}
               />
               <TableCommon
                 {...propsConfig}

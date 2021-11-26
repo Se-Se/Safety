@@ -1,10 +1,12 @@
+import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Input, Layout, message, Select, Row, Col } from '@tencent/tea-component';
+import { Button, Card, Col, Input, Layout, message, Row } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
+import cookie from 'react-cookies';
 import { useIndexedDB } from 'react-indexed-db';
-import BreadcrumbPage from '@src/components/crumb';
 import AddModal from './components/addModal';
+import { filterTheTrade } from '@src/utils/util';
 
 const { Body, Content } = Layout;
 
@@ -19,6 +21,7 @@ type RecordType = {
   editMen?: string;
   editedAt?: string | number;
   businessPic?: string;
+  safetyTrade?: string;
 };
 const crumb = [
   { name: '银行', link: '/main' },
@@ -27,7 +30,9 @@ const crumb = [
 const BusinessPage: React.FC = () => {
   const [dataList, setDataList] = useState<RecordType[]>();
   const [allList, setAllList] = useState<RecordType[]>();
-  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.business);
+  const { add, getAll, getByIndex, update, deleteRecord } = useIndexedDB(DBTableName.business);
+  const val = cookie.load('safetyTrade');
+  const [trade, setTrade] = useState(val);
 
   const [businessN, setBusinessN] = useState('');
   const [selectPart, setSelectPart] = useState('');
@@ -41,8 +46,10 @@ const BusinessPage: React.FC = () => {
     getAll()
       .then(data => {
         console.log(data, 123);
-        setDataList(data);
-        setAllList(data);
+        const arr = filterTheTrade(data, 'safetyTrade', trade);
+        console.log(arr, 55555555);
+        setDataList([...arr]);
+        setAllList([...arr]);
       })
       .catch(() => {});
   };
@@ -227,6 +234,7 @@ const BusinessPage: React.FC = () => {
                 theData={modalData}
                 allData={dataList}
                 visible={showModal}
+                trade={trade}
               />
               <TableCommon {...propsConfig} showPic={handleShowPic} selectItems={handleSelectItems}></TableCommon>
             </Card.Body>

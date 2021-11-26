@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Modal, Button, Row, Col, Input, message } from '@tencent/tea-component';
-import { useIndexedDB } from 'react-indexed-db';
 import { DBTableName } from '@src/services';
+import { Button, Col, Input, message, Modal, Row } from '@tencent/tea-component';
+import React, { useEffect, useState } from 'react';
+import { useIndexedDB } from 'react-indexed-db';
 
 type RecordType = {
   id?: number;
@@ -14,6 +14,7 @@ type RecordType = {
   editMen?: string;
   editedAt?: string | number;
   businessPic?: string;
+  safetyTrade?: string;
 };
 export default function AddModal(props) {
   const { add, update } = useIndexedDB(DBTableName.business);
@@ -86,6 +87,7 @@ export default function AddModal(props) {
         part: thePart.trim(),
         businessKinds: businessK.trim(),
         createdAt: +new Date(),
+        safetyTrade: props.trade,
       })
         .then(() => {
           message.success({ content: '成功' });

@@ -11,12 +11,8 @@ type ScenesType = {
   strategy?: string;
   attackObject?: string;
   loseEffect?: string;
+  safetyTrade?: string;
 };
-
-const systemOption = [
-  { value: 'otherSys', text: '第三方系统' },
-  { value: 'ownSys', text: '内部系统' },
-];
 
 export default function AddModal(props) {
   const { add, update } = useIndexedDB(DBTableName[props.comName]);
@@ -115,6 +111,7 @@ export default function AddModal(props) {
         strategy: theStrategy.trim(),
         attackObject: theAttackObject.trim(),
         loseEffect: theLoseEffect.trim(),
+        safetyTrade: props.trade,
       };
       add<ScenesType>(request)
         .then(() => {
