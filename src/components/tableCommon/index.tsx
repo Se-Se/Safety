@@ -117,16 +117,28 @@ const TableCommon: React.FC<any> = props => {
       },
       // gap
       {
-        key: 'gapName',
-        header: '名称',
+        key: 'gapId',
+        header: '攻击手法与漏洞id',
+      },
+      {
+        key: 'propertyAndSystem',
+        header: '资产/系统名称',
       },
       {
         key: 'categorys',
         header: '分类',
       },
       {
-        key: 'remarks',
-        header: '备注说明',
+        key: 'theType',
+        header: '类型',
+      },
+      {
+        key: 'actType',
+        header: '攻击手法',
+      },
+      {
+        key: 'theBug',
+        header: '漏洞',
       },
 
       //recommend
@@ -207,19 +219,10 @@ const TableCommon: React.FC<any> = props => {
               type="link"
               onClick={() => {
                 console.log(props, 666);
-                props.onAction(record);
+                props.onEdit(record);
               }}
             >
               编辑
-            </Button>
-            <Button
-              type="link"
-              style={{ color: '#e54545' }}
-              onClick={() => {
-                props.delete(record);
-              }}
-            >
-              删除
             </Button>
           </>
         );
