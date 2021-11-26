@@ -44,6 +44,7 @@
     "@antv/g6": "^4.4.1",
     "@antv/x6": "^1.28.1",
     "@tencent/tea-component": "^2.2.1",
+    "braft-editor": "^2.3.9",
     "core-js": "^3.6.5",
     "history": "^4.9.0",
     "lodash-es": "^4.17.21",

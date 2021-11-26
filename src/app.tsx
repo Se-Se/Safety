@@ -27,7 +27,7 @@ import '@tencent/tea-component/lib/tea.css';
 import './app.less';
 import '../node_modules/react-grid-layout/css/styles.css';
 import '../node_modules/react-resizable/css/styles.css';
-import '@src/configs/index.css';
+import '@src/configs/css/index.css';
 import { initDatabase } from './services/db';
 
 // mock 本地数据库
