@@ -42,6 +42,7 @@
   ],
   "dependencies": {
     "@antv/g6": "^4.4.1",
+    "@antv/hierarchy": "^0.6.8",
     "@antv/x6": "^1.28.1",
     "@tencent/tea-component": "^2.2.1",
     "braft-editor": "^2.3.9",
