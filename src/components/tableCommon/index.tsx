@@ -217,7 +217,8 @@ const TableCommon: React.FC<any> = props => {
           <>
             <Button
               type="link"
-              onClick={() => {
+              onClick={ev => {
+                ev.stopPropagation();
                 console.log(props, 666);
                 props.onEdit(record);
               }}

@@ -48,7 +48,7 @@ export default function AddModal(props) {
   const [belongFieldB, setBelongFieldB] = useState('');
   const [kindOption, setKindOption] = useState('');
   const [belongOption, setBelongOption] = useState([]);
-  const [cascaderProperty, setCascaderProperty] = useState('');
+  const [cascaderProperty, setCascaderProperty] = useState([]);
 
   // 拉取数据
   const fetchList = () => {
@@ -101,9 +101,7 @@ export default function AddModal(props) {
   };
   // 资产类型选择
   const handleCascaderChange = (v): void => {
-    let str = v.join('/');
-    console.log(str);
-    setCascaderProperty(str);
+    setCascaderProperty(v);
   };
   const init = () => {
     setTheName('');
@@ -111,6 +109,7 @@ export default function AddModal(props) {
     setBelongFieldA('');
     setBelongFieldB('');
     setKindOption('');
+    setCascaderProperty([]);
   };
   const close = () => {
     props.close();
@@ -127,7 +126,7 @@ export default function AddModal(props) {
       message.success({ content: '请选择所属业务' });
       return false;
     }
-    if (props.comName === 'property' && cascaderProperty.trim() === '') {
+    if (props.comName === 'property' && cascaderProperty.join('/').trim() === '') {
       message.success({ content: '请选择资产类型' });
       return false;
     }
@@ -165,8 +164,8 @@ export default function AddModal(props) {
         business: belongSelect.trim(),
         businessKinds: belongFieldA.trim(),
         part: belongFieldB.trim(),
-        propertyKind: cascaderProperty.trim(),
-        editMen: '王翰',
+        propertyKind: cascaderProperty.join('/').trim(),
+        editMen: 'shanehwang',
         editedAt: +new Date(),
       };
 
@@ -187,8 +186,8 @@ export default function AddModal(props) {
         business: belongSelect.trim(),
         businessKinds: belongFieldA.trim(),
         part: belongFieldB.trim(),
-        propertyKind: cascaderProperty.trim(),
-        addMen: '王翰',
+        propertyKind: cascaderProperty.join('/').trim(),
+        addMen: 'shanehwang',
         createdAt: +new Date(),
         safetyTrade: props.trade,
       };
@@ -207,15 +206,11 @@ export default function AddModal(props) {
   };
   useEffect(() => {
     if (props.theData && props.isEdit) {
-      setTheName(props.theData.systemName);
+      setTheName(props.theData.propertyName);
       setBelongSelect(props.theData.business);
       setBelongFieldA(props.theData.businessKinds);
       setBelongFieldB(props.theData.part);
-      if (props.comName === 'property') {
-        setCascaderProperty(props.theData.propertyKind);
-      } else {
-        setKindOption(props.theData.systemKinds);
-      }
+      setCascaderProperty(props.theData.propertyKind.split('/'));
     }
   }, [props.theData]);
   const templageFn = () => {
@@ -241,6 +236,7 @@ export default function AddModal(props) {
             <Col span={6}>所属业务</Col>
             <Col span={12}>
               <Select
+                value={belongSelect}
                 clearable
                 matchButtonWidth
                 appearance="button"
@@ -258,6 +254,8 @@ export default function AddModal(props) {
             <Col span={6}>资产类型</Col>
             <Col span={12}>
               <Cascader
+                style={{ width: '100%' }}
+                value={cascaderProperty}
                 clearable
                 type="menu"
                 data={props.propertyOption}

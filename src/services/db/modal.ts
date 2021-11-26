@@ -106,6 +106,8 @@ export const DBConfig = {
       storeSchema: [
         { name: 'areaId', keypath: 'areaId', options: { unique: false } },
         { name: 'areaName', keypath: 'areaName', options: { unique: false } },
+        { name: 'belongSystem', keypath: 'belongSystem', options: { unique: false } },
+        { name: 'belongProperty', keypath: 'belongProperty', options: { unique: false } },
         { name: 'systemAndProperty', keypath: 'systemAndProperty', options: { unique: false } },
         { name: 'addMen', keypath: 'addMen', options: { unique: false } },
         { name: 'createdAt', keypath: 'createdAt', options: { unique: false } },

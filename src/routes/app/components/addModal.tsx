@@ -143,7 +143,7 @@ export default function AddModal(props) {
         business: theBusiness.trim(),
         businessKinds: businessK.trim(),
         systemKinds: systemK.trim(),
-        editMen: 'editMen',
+        editMen: 'shanehwang',
         editedAt: +new Date(),
       })
         .then(() => {
@@ -162,6 +162,7 @@ export default function AddModal(props) {
         business: theBusiness.trim(),
         businessKinds: businessK.trim(),
         systemKinds: systemK.trim(),
+        addMen: 'shanehwang',
         createdAt: +new Date(),
         safetyTrade: props.trade,
       })
@@ -208,6 +209,7 @@ export default function AddModal(props) {
             <Col span={6}>所属业务</Col>
             <Col span={12}>
               <Select
+                value={theBusiness}
                 clearable
                 matchButtonWidth
                 appearance="button"
@@ -225,6 +227,7 @@ export default function AddModal(props) {
             <Col span={6}>系统类型</Col>
             <Col span={12}>
               <Select
+                value={systemK}
                 clearable
                 matchButtonWidth
                 appearance="button"

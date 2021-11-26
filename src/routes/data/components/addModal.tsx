@@ -134,7 +134,7 @@ export default function AddModal(props) {
         dataName: theName.trim(),
         systemPart: belongSelect.trim(),
         systemKinds: belongField.trim(),
-        editMen: '王翰',
+        editMen: 'shanehwang',
         editedAt: +new Date(),
       })
         .then(() => {
@@ -152,7 +152,7 @@ export default function AddModal(props) {
         dataName: theName.trim(),
         systemPart: belongSelect.trim(),
         systemKinds: belongField.trim(),
-        addMen: '王翰',
+        addMen: 'shanehwang',
         createdAt: +new Date(),
         safetyTrade: props.trade,
       })
@@ -170,7 +170,7 @@ export default function AddModal(props) {
   useEffect(() => {
     if (props.theData && props.isEdit) {
       setTheName(props.theData.dataName);
-      setBelongSelect(props.theData.systemName);
+      setBelongSelect(props.theData.systemPart);
       setBelongField(props.theData.systemKinds);
     }
   }, [props.theData]);
@@ -198,6 +198,7 @@ export default function AddModal(props) {
             <Col span={6}>所属系统</Col>
             <Col span={12}>
               <Select
+                value={belongSelect}
                 clearable
                 matchButtonWidth
                 appearance="button"

@@ -1,7 +1,7 @@
 import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Cascader, Col, Input, Layout, message, Row } from '@tencent/tea-component';
+import { Button, Card, Cascader, Col, Input, Layout, message, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import AddModal from './components/addModal';
@@ -126,7 +126,13 @@ const PropertyPage: React.FC = () => {
     setIsEdit(false);
     setShowModal(true);
   };
-
+  // 点击编辑按钮
+  const handleEdit = data => {
+    console.log(data);
+    setModalData({ ...data });
+    setIsEdit(true);
+    setShowModal(true);
+  };
   // 搜索框搜索
   const handleInputChange = (value, attr) => {
     if (attr === 'inputOne') {
@@ -228,74 +234,49 @@ const PropertyPage: React.FC = () => {
       'createdAt',
       'editMen',
       'editedAt',
+      'action',
     ],
-    left: (
-      <Row>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            资产名称:
-          </Button>
-        </Col>
-        <Col span={3}>
-          <Input
-            value={inputOne}
-            onChange={(value, context) => {
-              handleInputChange(value, 'inputOne');
-            }}
-            placeholder="请输入资产名称进行搜索"
-          />
-        </Col>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            所属业务:
-          </Button>
-        </Col>
-        <Col span={3}>
-          <Input
-            value={inputTwo}
-            onChange={(value, context) => {
-              handleInputChange(value, 'inputTwo');
-            }}
-            placeholder="请输入所属业务进行搜索"
-          />
-        </Col>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            所属部门:
-          </Button>
-        </Col>
-        <Col span={3}>
-          <Input
-            value={inputThree}
-            onChange={(value, context) => {
-              handleInputChange(value, 'inputThree');
-            }}
-            placeholder="请输入所属部门进行搜索"
-          />
-        </Col>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            资产类型:
-          </Button>
-        </Col>
-        <Col span={3}>
-          <Cascader
-            clearable
-            type="menu"
-            data={propertyOption}
-            multiple={false}
-            onChange={value => {
-              handleSelectChange(value);
-            }}
-          />
-        </Col>
-      </Row>
-    ),
     right: (
+      <>
+        <SearchBox
+          className="margin-r-30"
+          value={inputOne}
+          onChange={value => {
+            handleInputChange(value, 'inputOne');
+          }}
+          placeholder="请输入资产名称"
+        />
+
+        <SearchBox
+          className="margin-r-30"
+          value={inputTwo}
+          onChange={value => {
+            handleInputChange(value, 'inputTwo');
+          }}
+          placeholder="请输入所属业务"
+        />
+
+        <SearchBox
+          className="margin-r-30"
+          value={inputThree}
+          onChange={value => {
+            handleInputChange(value, 'inputThree');
+          }}
+          placeholder="请输入所属部门"
+        />
+
+        <Cascader
+          clearable
+          type="menu"
+          data={propertyOption}
+          multiple={false}
+          onChange={value => {
+            handleSelectChange(value);
+          }}
+        />
+      </>
+    ),
+    left: (
       <>
         <Button type="primary" onClick={onAdd}>
           新增系统
@@ -330,7 +311,7 @@ const PropertyPage: React.FC = () => {
                 comName={'property'}
                 trade={trade}
               />
-              <TableCommon {...propsConfig} selectItems={handleSelectItems}></TableCommon>
+              <TableCommon {...propsConfig} onEdit={handleEdit} selectItems={handleSelectItems}></TableCommon>
             </Card.Body>
           </Card>
         </Content.Body>

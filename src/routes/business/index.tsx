@@ -1,7 +1,7 @@
 import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Col, Input, Layout, message, Row } from '@tencent/tea-component';
+import { Button, Card, Col, Input, Layout, message, Row, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import cookie from 'react-cookies';
 import { useIndexedDB } from 'react-indexed-db';
@@ -73,7 +73,13 @@ const BusinessPage: React.FC = () => {
     setIsEdit(false);
     setShowModal(true);
   };
-
+  // 点击编辑按钮
+  const handleEdit = data => {
+    console.log(data);
+    setModalData({ ...data });
+    setIsEdit(true);
+    setShowModal(true);
+  };
   // 搜索框搜索
   const handleInputChange = (value, attr) => {
     if (attr === 'businessN') {
@@ -83,6 +89,7 @@ const BusinessPage: React.FC = () => {
       setSelectPart(value);
     }
   };
+
   const filterDataList = (arr: any) => {
     if (!arr) {
       return [];
@@ -149,10 +156,6 @@ const BusinessPage: React.FC = () => {
     setModalData(data);
   };
 
-  const parts = [
-    { value: 's1', text: '所属部门1' },
-    { value: 's2', text: '所属部门2' },
-  ];
   const propsConfig = {
     list: dataList,
     columns: [
@@ -165,49 +168,34 @@ const BusinessPage: React.FC = () => {
       'editMen',
       'editedAt',
       'businessPic',
+      'action',
     ],
-    left: (
-      <Row>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            业务名称:
-          </Button>
-        </Col>
-        <Col span={6}>
-          <Input
-            value={businessN}
-            onChange={(value, context) => {
-              handleInputChange(value, 'businessN');
-
-              console.log(value, context, 1111111111);
-            }}
-            placeholder="请输入业务名称进行搜索"
-          />
-        </Col>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            所属部门:
-          </Button>
-        </Col>
-        <Col span={6}>
-          <Input
-            value={selectPart}
-            onChange={(value, context) => {
-              handleInputChange(value, 'selectPart');
-              console.log(value, context);
-            }}
-            placeholder="请输入所属部门进行搜索"
-          />
-        </Col>
-      </Row>
-    ),
     right: (
+      <>
+        <SearchBox
+          className="margin-r-30"
+          value={businessN}
+          onChange={value => {
+            handleInputChange(value, 'businessN');
+          }}
+          placeholder="业务名称进行搜索"
+        />
+
+        <SearchBox
+          value={selectPart}
+          onChange={value => {
+            handleInputChange(value, 'selectPart');
+          }}
+          placeholder="请输入所属部门"
+        />
+      </>
+    ),
+    left: (
       <>
         <Button type="primary" onClick={onAdd}>
           新增业务
         </Button>
+
         <Button type="weak" onClick={handleDelete}>
           删除
         </Button>
@@ -236,7 +224,12 @@ const BusinessPage: React.FC = () => {
                 visible={showModal}
                 trade={trade}
               />
-              <TableCommon {...propsConfig} showPic={handleShowPic} selectItems={handleSelectItems}></TableCommon>
+              <TableCommon
+                {...propsConfig}
+                showPic={handleShowPic}
+                onEdit={handleEdit}
+                selectItems={handleSelectItems}
+              ></TableCommon>
             </Card.Body>
           </Card>
         </Content.Body>

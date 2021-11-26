@@ -8,6 +8,8 @@ type FrameType = {
   id?: number;
   areaId?: string;
   areaName?: string;
+  belongSystem?: string;
+  belongProperty?: string;
   systemAndProperty?: string;
   addMen?: string;
   createdAt?: string | number;
@@ -15,38 +17,39 @@ type FrameType = {
   editedAt?: string | number;
   safetyTrade?: string;
 };
-const systemOption = [
-  { value: 'otherSys', text: '第三方系统' },
-  { value: 'ownSys', text: '内部系统' },
-];
 
 export default function AddModal(props) {
-  const { add, update } = useIndexedDB(DBTableName[props.comName]);
+  const { add, update } = useIndexedDB(DBTableName.frame);
   const getUseDb = () => {
-    if (props.comName === 'frame') {
-      return useIndexedDB(DBTableName.app);
-    } else {
-      return useIndexedDB(DBTableName.business);
-    }
+    return useIndexedDB(DBTableName.app);
   };
   const { getAll } = getUseDb();
-  const [tableData, setTableData] = useState([]);
 
   const [theName, setTheName] = useState('');
   const [belongSelect, setBelongSelect] = useState('');
-
   const [belongOption, setBelongOption] = useState([]);
-  const [cascaderProperty, setCascaderProperty] = useState('');
+  const [propertyName, setPropertyName] = useState('');
+  const [propertyNameOption, setPropertyNameOption] = useState([]);
 
+  // 获取所有网络资产数据
+  const getPropertys = () => {
+    const { getAll } = useIndexedDB(DBTableName.property);
+    getAll()
+      .then(data => {
+        const arr = filterTheTrade(data, 'safetyTrade', props.trade);
+        getSelecOptions([...arr], 'propertyNameOption');
+      })
+      .catch(() => {});
+  };
   // 拉取数据
   const fetchList = () => {
     getAll()
       .then(data => {
         const arr = filterTheTrade(data, 'safetyTrade', props.trade);
-        getSelecOptions([...arr]);
-        setTableData([...arr]);
+        getSelecOptions([...arr], 'belongOption');
       })
       .catch(() => {});
+    getPropertys();
   };
   // 首次打开页面加载
   useEffect(() => {
@@ -54,7 +57,7 @@ export default function AddModal(props) {
       fetchList();
     }
   }, [props.visible]);
-  const getSelecOptions = data => {
+  const getSelecOptions = (data, attr) => {
     if (!data) {
       return;
     }
@@ -62,13 +65,21 @@ export default function AddModal(props) {
     const theNameArr = [];
     data.map(item => {
       const obj: any = {};
-      obj.value = item.systemName;
-      obj.text = item.systemName;
+      if (attr === 'propertyNameOption') {
+        obj.value = item.propertyName;
+        obj.text = item.propertyName;
+      } else {
+        obj.value = item.systemName;
+        obj.text = item.systemName;
+      }
+
       theNameArr.push(obj);
     });
-
-    setBelongOption([...theNameArr]);
-    console.log(7777777777777);
+    if (attr === 'propertyNameOption') {
+      setPropertyNameOption([...theNameArr]);
+    } else {
+      setBelongOption([...theNameArr]);
+    }
   };
 
   // select change 事件
@@ -81,18 +92,20 @@ export default function AddModal(props) {
         setBelongSelect('');
       }
     }
+    if (attr === 'propertyName') {
+      if (v) {
+        setPropertyName(v);
+      } else {
+        setPropertyName('');
+      }
+    }
   };
   // 资产类型选择
-  const handleCascaderChange = (v): void => {
-    let str = v.join('/');
-    console.log(str);
-    setCascaderProperty(str);
-  };
+
   const init = () => {
     setTheName('');
     setBelongSelect('');
-
-    setCascaderProperty('');
+    setPropertyName('');
   };
   const close = () => {
     props.close();
@@ -109,7 +122,7 @@ export default function AddModal(props) {
       message.success({ content: '请选择包含系统' });
       return false;
     }
-    if (props.comName === 'frame' && cascaderProperty.trim() === '') {
+    if (props.comName === 'frame' && propertyName.trim() === '') {
       message.success({ content: '包含网络资产' });
       return false;
     }
@@ -139,8 +152,10 @@ export default function AddModal(props) {
       let request = {
         ...props.theData,
         areaName: theName.trim(),
-        systemAndProperty: belongSelect.trim() + '/' + cascaderProperty.trim(),
-        editMen: '王翰',
+        belongSystem: belongSelect.trim(),
+        belongProperty: propertyName.trim(),
+        systemAndProperty: belongSelect.trim() + '/' + propertyName.trim(),
+        editMen: 'shanehwang',
         editedAt: +new Date(),
       };
 
@@ -158,8 +173,10 @@ export default function AddModal(props) {
       let request = {
         areaId: 'area_id' + new Date().getTime(),
         areaName: theName.trim(),
-        systemAndProperty: belongSelect.trim() + '/' + cascaderProperty.trim(),
-        addMen: '王翰',
+        belongSystem: belongSelect.trim(),
+        belongProperty: propertyName.trim(),
+        systemAndProperty: belongSelect.trim() + '/' + propertyName.trim(),
+        addMen: 'shanehwang',
         createdAt: +new Date(),
         safetyTrade: props.trade,
       };
@@ -178,8 +195,9 @@ export default function AddModal(props) {
   };
   useEffect(() => {
     if (props.theData && props.isEdit) {
-      setTheName(props.theData.systemName);
-      setBelongSelect(props.theData.business);
+      setTheName(props.theData.areaName);
+      setBelongSelect(props.theData.belongSystem);
+      setPropertyName(props.theData.belongProperty);
     }
   }, [props.theData]);
   const templageFn = () => {
@@ -204,6 +222,7 @@ export default function AddModal(props) {
           <Col span={6}>包含系统</Col>
           <Col span={12}>
             <Select
+              value={belongSelect}
               clearable
               matchButtonWidth
               appearance="button"
@@ -220,14 +239,17 @@ export default function AddModal(props) {
           <Col span={1}></Col>
           <Col span={6}>包含网络资产</Col>
           <Col span={12}>
-            <Cascader
+            <Select
+              value={propertyName}
               clearable
-              type="menu"
-              data={props.propertyOption}
-              multiple={false}
+              matchButtonWidth
+              appearance="button"
+              placeholder="请选择网络资产"
+              options={propertyNameOption}
               onChange={value => {
-                handleCascaderChange(value);
+                handleSelectChange(value, 'propertyName');
               }}
+              size="full"
             />
           </Col>
         </Row>

@@ -1,6 +1,6 @@
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Input, Layout, message, Select, Row, Col } from '@tencent/tea-component';
+import { Button, Card, Input, Layout, message, Select, Row, Col, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import BreadcrumbPage from '@src/components/crumb';
@@ -77,7 +77,13 @@ const DataPage: React.FC = () => {
     setIsEdit(false);
     setShowModal(true);
   };
-
+  // 点击编辑按钮
+  const handleEdit = data => {
+    console.log(data);
+    setModalData({ ...data });
+    setIsEdit(true);
+    setShowModal(true);
+  };
   // 搜索框搜索
   const handleInputChange = (value, attr) => {
     if (attr === 'inputOne') {
@@ -150,52 +156,41 @@ const DataPage: React.FC = () => {
       });
     }
   };
-  const handleShowPic = (data): void => {
-    console.log(111, data);
-    setModalData(data);
-  };
 
   const propsConfig = {
     list: dataList,
-    columns: ['dataId', 'dataName', 'systemPart', 'systemKinds', 'addMen', 'createdAt', 'editMen', 'editedAt'],
-    left: (
-      <Row>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            名称:
-          </Button>
-        </Col>
-        <Col span={4}>
-          <Input
-            value={inputOne}
-            onChange={(value, context) => {
-              handleInputChange(value, 'inputOne');
-
-              console.log(value, context, 1111111111);
-            }}
-            placeholder="请输入数据名称进行搜索"
-          />
-        </Col>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            所属系统:
-          </Button>
-        </Col>
-        <Col span={4}>
-          <Input
-            value={inputTwo}
-            onChange={(value, context) => {
-              handleInputChange(value, 'inputTwo');
-              console.log(value, context);
-            }}
-            placeholder="请输入所属系统进行搜索"
-          />
-        </Col>
-      </Row>
-    ),
+    columns: [
+      'dataId',
+      'dataName',
+      'systemPart',
+      'systemKinds',
+      'addMen',
+      'createdAt',
+      'editMen',
+      'editedAt',
+      'action',
+    ],
     right: (
+      <>
+        <SearchBox
+          value={inputOne}
+          className="margin-r-30"
+          onChange={value => {
+            handleInputChange(value, 'inputOne');
+          }}
+          placeholder="请输入数据名称"
+        />
+
+        <SearchBox
+          value={inputTwo}
+          onChange={value => {
+            handleInputChange(value, 'inputTwo');
+          }}
+          placeholder="请输入所属系统"
+        />
+      </>
+    ),
+    left: (
       <>
         <Button type="primary" onClick={onAdd}>
           新增数据
@@ -231,7 +226,7 @@ const DataPage: React.FC = () => {
               <TableCommon
                 {...propsConfig}
                 systemKOptions={systemKOptions}
-                showPic={handleShowPic}
+                onEdit={handleEdit}
                 selectItems={handleSelectItems}
               ></TableCommon>
             </Card.Body>

@@ -68,7 +68,7 @@ export default function AddModal(props) {
         businessName: businessN.trim(),
         part: thePart.trim(),
         businessKinds: businessK.trim(),
-        editMen: 'editMen',
+        editMen: 'shanehwang',
         editedAt: +new Date(),
       })
         .then(() => {
@@ -86,6 +86,7 @@ export default function AddModal(props) {
         businessName: businessN.trim(),
         part: thePart.trim(),
         businessKinds: businessK.trim(),
+        addMen: 'shanehwang',
         createdAt: +new Date(),
         safetyTrade: props.trade,
       })

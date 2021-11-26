@@ -9,55 +9,13 @@ import cookie from 'react-cookies';
 import { filterTheTrade } from '@src/utils/util';
 
 const { Body, Content } = Layout;
-const propertyOption = [
-  {
-    label: '网络',
-    value: '网络',
-    children: [
-      { label: '交换机', value: '交换机' },
-      { label: '路由器', value: '路由器' },
-      { label: '防火墙', value: '防火墙' },
-      { label: '堡垒机', value: '堡垒机' },
-      { label: 'IPS', value: 'IPS' },
-      { label: 'IDS', value: 'IDS' },
-    ],
-  },
-  {
-    label: '客户端',
-    value: '客户端',
-    children: [
-      { label: '浏览器', value: '浏览器' },
-      { label: '手机', value: '手机' },
-      { label: 'PC终端', value: 'PC终端' },
-      { label: 'PDA手持设备', value: 'PDA手持设备' },
-      { label: 'ATM终端', value: 'ATM终端' },
-    ],
-  },
-  {
-    label: '服务器',
-    value: '服务器',
-    children: [
-      { label: 'web服务器', value: 'web服务器' },
-      { label: '邮件服务器', value: '邮件服务器' },
-      { label: '应用服务器', value: '应用服务器' },
-      { label: '应用服务器集群', value: '应用服务器集群' },
-    ],
-  },
-  {
-    label: '数据存储',
-    value: '数据存储',
-    children: [
-      { label: '数据仓库', value: '数据仓库' },
-      { label: '关系型数据库', value: '关系型数据库' },
-      { label: 'NoSql数据库', value: 'NoSql数据库' },
-      { label: '文件数据库', value: '文件数据库' },
-    ],
-  },
-];
+
 type FrameType = {
   id?: number;
   areaId?: string;
   areaName?: string;
+  belongSystem?: string;
+  belongProperty?: string;
   systemAndProperty?: string;
   addMen?: string;
   createdAt?: string | number;
@@ -114,6 +72,13 @@ const FramePage: React.FC = () => {
     setIsEdit(false);
     setShowModal(true);
   };
+  // 点击编辑按钮
+  const handleEdit = data => {
+    console.log(data);
+    setModalData({ ...data });
+    setIsEdit(true);
+    setShowModal(true);
+  };
 
   //表格checkbox被选中
   const handleSelectItems = data => {
@@ -140,9 +105,8 @@ const FramePage: React.FC = () => {
 
   const propsConfig = {
     list: dataList,
-    columns: ['areaId', 'areaName', 'systemAndProperty', 'addMen', 'createdAt', 'editMen', 'editedAt'],
-    left: <></>,
-    right: (
+    columns: ['areaId', 'areaName', 'systemAndProperty', 'addMen', 'createdAt', 'editMen', 'editedAt', 'action'],
+    left: (
       <>
         <Button type="primary" onClick={onAdd}>
           新增系统
@@ -173,11 +137,9 @@ const FramePage: React.FC = () => {
                 theData={modalData}
                 allData={dataList}
                 visible={showModal}
-                propertyOption={propertyOption}
-                comName={'frame'}
                 trade={trade}
               />
-              <TableCommon {...propsConfig} selectItems={handleSelectItems}></TableCommon>
+              <TableCommon {...propsConfig} onEdit={handleEdit} selectItems={handleSelectItems}></TableCommon>
             </Card.Body>
           </Card>
         </Content.Body>

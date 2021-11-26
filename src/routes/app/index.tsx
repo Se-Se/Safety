@@ -1,7 +1,7 @@
 import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Col, Input, Layout, message, Row, Select } from '@tencent/tea-component';
+import { Button, Card, Col, Input, Layout, message, Row, Select, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import AddModal from './components/addModal';
@@ -45,7 +45,7 @@ const AppPage: React.FC = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [checkItem, setCheckItem] = useState([]);
-  const [headerSelect, setHeaderSelect] = useState('all');
+  const [headerSelect, setHeaderSelect] = useState('');
 
   // 拉取数据
   const fetchList = () => {
@@ -77,6 +77,13 @@ const AppPage: React.FC = () => {
   // 点击添加按钮
   const onAdd = () => {
     setIsEdit(false);
+    setShowModal(true);
+  };
+  // 点击编辑按钮
+  const handleEdit = data => {
+    console.log(data);
+    setModalData({ ...data });
+    setIsEdit(true);
     setShowModal(true);
   };
 
@@ -173,64 +180,46 @@ const AppPage: React.FC = () => {
       'createdAt',
       'editMen',
       'editedAt',
+      'action',
     ],
-    left: (
-      <Row>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            系统名称:
-          </Button>
-        </Col>
-        <Col span={4}>
-          <Input
-            value={inputOne}
-            onChange={(value, context) => {
-              handleInputChange(value, 'inputOne');
-
-              console.log(value, context, 1111111111);
-            }}
-            placeholder="请输入系统名称进行搜索"
-          />
-        </Col>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            所属业务:
-          </Button>
-        </Col>
-        <Col span={4}>
-          <Input
-            value={inputTwo}
-            onChange={(value, context) => {
-              handleInputChange(value, 'inputTwo');
-              console.log(value, context);
-            }}
-            placeholder="请输入所属业务进行搜索"
-          />
-        </Col>
-        <Col span={1}></Col>
-        <Col span={2}>
-          <Button type="text" style={{ margin: '0', cursor: 'text' }}>
-            系统类型:
-          </Button>
-        </Col>
-        <Col span={4}>
-          <Select
-            clearable
-            matchButtonWidth
-            appearance="button"
-            value={headerSelect}
-            onChange={v => {
-              handleSelectChange(v);
-            }}
-            options={systemKOptions}
-            size="full"
-          />
-        </Col>
-      </Row>
-    ),
     right: (
+      <>
+        <SearchBox
+          size="m"
+          value={inputOne}
+          className="margin-r-30"
+          onChange={(value, context) => {
+            handleInputChange(value, 'inputOne');
+
+            console.log(value, context, 1111111111);
+          }}
+          placeholder="请输入系统名称"
+        />
+
+        <SearchBox
+          size="m"
+          value={inputTwo}
+          className="margin-r-30"
+          onChange={(value, context) => {
+            handleInputChange(value, 'inputTwo');
+            console.log(value, context);
+          }}
+          placeholder="请输入所属业务"
+        />
+        <Select
+          size="m"
+          matchButtonWidth
+          placeholder="系统类型"
+          appearance="button"
+          value={headerSelect}
+          onChange={v => {
+            handleSelectChange(v);
+          }}
+          options={systemKOptions}
+        />
+      </>
+    ),
+    left: (
       <>
         <Button type="primary" onClick={onAdd}>
           新增系统
@@ -267,6 +256,7 @@ const AppPage: React.FC = () => {
                 {...propsConfig}
                 systemKOptions={systemKOptions}
                 showPic={handleShowPic}
+                onEdit={handleEdit}
                 selectItems={handleSelectItems}
               ></TableCommon>
             </Card.Body>
