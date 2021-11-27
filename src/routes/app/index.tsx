@@ -22,6 +22,7 @@ type RecordType = {
   editMen?: string;
   editedAt?: string | number;
   safetyTrade?: string;
+  theBusinessId?:string;
 };
 const crumb = [
   { name: '银行', link: '/main' },
@@ -47,6 +48,16 @@ const AppPage: React.FC = () => {
   const [checkItem, setCheckItem] = useState([]);
   const [headerSelect, setHeaderSelect] = useState('');
 
+  // 修改gap表数据
+  const handleGapTable=(id)=>{
+    const {deleteRecord } = useIndexedDB(DBTableName.gap);
+    deleteRecord(id)
+    .then(() => {
+    })
+    .catch(err => {
+      message.error({ content: `失败${err}` });
+    });
+  }
   // 拉取数据
   const fetchList = () => {
     getAll()
@@ -150,8 +161,9 @@ const AppPage: React.FC = () => {
   const handleDelete = (): void => {
     if (checkItem.length) {
       checkItem.map((item, index) => {
-        deleteRecord(Number(item))
+        deleteRecord(item)
           .then(() => {
+            handleGapTable(item);
             if (index === checkItem.length - 1) {
               message.success({ content: '成功' });
               fetchList();

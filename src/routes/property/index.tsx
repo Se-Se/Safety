@@ -81,7 +81,7 @@ const systemKOptions = [
 const PropertyPage: React.FC = () => {
   const [dataList, setDataList] = useState<PropertyType[]>();
   const [allList, setAllList] = useState<PropertyType[]>();
-  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.property);
+  const {  getAll,  deleteRecord } = useIndexedDB(DBTableName.property);
   const val = cookie.load('safetyTrade');
   const [trade, setTrade] = useState(val);
 
@@ -94,6 +94,17 @@ const PropertyPage: React.FC = () => {
   const [checkItem, setCheckItem] = useState([]);
   const [headerSelect, setHeaderSelect] = useState('all');
 
+
+    // 修改gap表数据
+    const handleGapTable=(id)=>{
+      const {deleteRecord } = useIndexedDB(DBTableName.gap);
+      deleteRecord(id)
+      .then(() => {
+      })
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
+    }
   // 拉取数据
   const fetchList = () => {
     getAll()
@@ -207,8 +218,9 @@ const PropertyPage: React.FC = () => {
   const handleDelete = (): void => {
     if (checkItem.length) {
       checkItem.map((item, index) => {
-        deleteRecord(Number(item))
+        deleteRecord(item)
           .then(() => {
+            handleGapTable(item)
             if (index === checkItem.length - 1) {
               message.success({ content: '成功' });
               fetchList();

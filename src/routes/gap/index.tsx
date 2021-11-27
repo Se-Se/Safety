@@ -37,7 +37,7 @@ const systemOrPropertyOption = [
 const GapPage: React.FC = () => {
   const [dataList, setDataList] = useState<GapType[]>();
   const [allList, setAllList] = useState<GapType[]>();
-  const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.gap);
+  const { getAll } = useIndexedDB(DBTableName.gap);
   const val = cookie.load('safetyTrade');
   const [trade, setTrade] = useState(val);
 
@@ -53,7 +53,7 @@ const GapPage: React.FC = () => {
 
   // 拉取应用系统数据
   const getAppData = () => {
-    const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.app);
+    const { getAll } = useIndexedDB(DBTableName.app);
     getAll()
       .then(data => {
         const arr = filterTheTrade(data, 'safetyTrade', trade);

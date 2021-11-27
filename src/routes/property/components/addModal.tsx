@@ -17,6 +17,7 @@ type PropertyType = {
   editMen?: string;
   editedAt?: string | number;
   safetyTrade?: string;
+  theBusinessId?:string;
 };
 type Business = {
   id?: number;
@@ -30,8 +31,23 @@ type Business = {
   editedAt?: string | number;
   businessPic?: string;
   safetyTrade?: string;
+  
 };
-
+type GapType = {
+  gapId?: string;
+  propertyOrSystem?: string;
+  business?: string;
+  businessKinds?: string;
+  part?: string;
+  categorys?: string;
+  theType?: string;
+  addMen?: string;
+  editedAt?: string | number;
+  actType?: string;
+  theBug?: string;
+  safetyTrade?: string;
+  theBusinessId?:string;
+};
 const systemOption = [
   { value: 'otherSys', text: '第三方系统' },
   { value: 'ownSys', text: '内部系统' },
@@ -49,7 +65,46 @@ export default function AddModal(props) {
   const [kindOption, setKindOption] = useState('');
   const [belongOption, setBelongOption] = useState([]);
   const [cascaderProperty, setCascaderProperty] = useState([]);
+  const [theBusinessId, setTheBusinessId] = useState('');
 
+
+    // 修改gap表数据
+    const handleGapTable=(type,data)=>{
+      const { add, update } = useIndexedDB(DBTableName.gap);
+      let request:GapType={
+        gapId:data.propertyId,
+        propertyOrSystem:data.propertyName,
+        business:data.business,
+        businessKinds:data.businessKinds,
+        part:data.part,
+        categorys:'property',
+        theType:data.propertyKind,
+        addMen:data.addMen,
+        editedAt:data.createdAt,
+        actType:'',
+        theBug:'',
+        safetyTrade:data.safetyTrade,
+        theBusinessId:data.theBusinessId
+      }
+      if(type === 'add'){
+        add<GapType>(request)
+        .then(() => {
+          message.success({ content: '成功' });
+        })
+        .catch(err => {
+          message.error({ content: `失败${err}` });
+        });
+    }else if(type === 'update'){
+      request.editedAt = data.editedAt
+      update<GapType>(request)
+      .then(() => {
+        message.success({ content: '成功' });
+      })
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
+    }   
+    }
   // 拉取数据
   const fetchList = () => {
     getAll()
@@ -110,6 +165,7 @@ export default function AddModal(props) {
     setBelongFieldB('');
     setKindOption('');
     setCascaderProperty([]);
+    setTheBusinessId('');
   };
   const close = () => {
     props.close();
@@ -171,7 +227,7 @@ export default function AddModal(props) {
 
       update<PropertyType>(request)
         .then(() => {
-          message.success({ content: '成功' });
+          handleGapTable('update',request);
           props.close();
           props.save();
           init();
@@ -190,11 +246,12 @@ export default function AddModal(props) {
         addMen: 'shanehwang',
         createdAt: +new Date(),
         safetyTrade: props.trade,
+        theBusinessId:theBusinessId,
       };
 
       add<PropertyType>(request)
         .then(() => {
-          message.success({ content: '成功' });
+          handleGapTable('add',request);
           props.close();
           props.save();
           init();
@@ -211,6 +268,7 @@ export default function AddModal(props) {
       setBelongFieldA(props.theData.businessKinds);
       setBelongFieldB(props.theData.part);
       setCascaderProperty(props.theData.propertyKind.split('/'));
+      setTheBusinessId(props.theData.theBusinessId);
     }
   }, [props.theData]);
   const templageFn = () => {

@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 
 type RecordType = {
-  id?: number;
   businessId?: string;
   businessName?: string;
   part?: string;

@@ -29,7 +29,7 @@ export const DBConfig = {
     },
     {
       store: DBTableName.business,
-      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeConfig: { keyPath: 'businessId' },
       storeSchema: [
         { name: 'businessId', keypath: 'businessId', options: { unique: false } },
         { name: 'businessName', keypath: 'businessName', options: { unique: false } },
@@ -58,6 +58,7 @@ export const DBConfig = {
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
         { name: 'part', keypath: 'part', options: { unique: false } },
         { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
+        { name: 'theBusinessId', keypath: 'theBusinessId', options: { unique: false } },
       ],
     },
     {
@@ -71,7 +72,7 @@ export const DBConfig = {
     },
     {
       store: DBTableName.data,
-      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeConfig: { keyPath: 'dataId' },
       storeSchema: [
         { name: 'dataId', keypath: 'dataId', options: { unique: false } },
         { name: 'dataName', keypath: 'dataName', options: { unique: false } },
@@ -86,7 +87,7 @@ export const DBConfig = {
     },
     {
       store: DBTableName.property,
-      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeConfig: { keyPath: 'propertyId' },
       storeSchema: [
         { name: 'propertyId', keypath: 'propertyId', options: { unique: false } },
         { name: 'propertyName', keypath: 'propertyName', options: { unique: false } },
@@ -99,11 +100,12 @@ export const DBConfig = {
         { name: 'editMen', keypath: 'editMen', options: { unique: false } },
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
         { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
+        { name: 'theBusinessId', keypath: 'theBusinessId', options: { unique: false } },
       ],
     },
     {
       store: DBTableName.frame,
-      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeConfig: { keyPath: 'areaId' },
       storeSchema: [
         { name: 'areaId', keypath: 'areaId', options: { unique: false } },
         { name: 'areaName', keypath: 'areaName', options: { unique: false } },
@@ -119,7 +121,7 @@ export const DBConfig = {
     },
     {
       store: DBTableName.recommend,
-      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeConfig: { keyPath: 'id'},
       storeSchema: [
         { name: 'name', keypath: 'name', options: { unique: false } },
         { name: 'type', keypath: 'type', options: { unique: false } },
@@ -129,7 +131,7 @@ export const DBConfig = {
     },
     {
       store: DBTableName.scenes,
-      storeConfig: { keyPath: 'id', autoIncrement: true },
+      storeConfig: { keyPath: 'scenesId' },
       storeSchema: [
         { name: 'scenesId', keypath: 'scenesId', options: { unique: false } },
         { name: 'sceneName', keypath: 'sceneName', options: { unique: false } },
@@ -142,7 +144,7 @@ export const DBConfig = {
 
     {
       store: DBTableName.gap,
-      storeConfig: { keyPath: 'gapId', autoIncrement: true },
+      storeConfig: { keyPath: 'gapId' },
       storeSchema: [
         { name: 'gapId', keypath: 'gapId', options: { unique: false } },
         { name: 'propertyOrSystem', keypath: 'propertyOrSystem', options: { unique: false } },
@@ -151,11 +153,13 @@ export const DBConfig = {
         { name: 'part', keypath: 'part', options: { unique: false } },
         { name: 'categorys', keypath: 'categorys', options: { unique: false } },
         { name: 'theType', keypath: 'theType', options: { unique: false } },
-        { name: 'editMen', keypath: 'editMen', options: { unique: false } },
+        { name: 'addMen', keypath: 'addMen', options: { unique: false } },
         { name: 'editedAt', keypath: 'editedAt', options: { unique: false } },
         { name: 'actType', keypath: 'actType', options: { unique: false } },
         { name: 'theBug', keypath: 'theBug', options: { unique: false } },
         { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
+        { name: 'theBusinessId', keypath: 'theBusinessId', options: { unique: false } },
+        
       ],
     },
   ],

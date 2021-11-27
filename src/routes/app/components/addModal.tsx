@@ -5,7 +5,6 @@ import { useIndexedDB } from 'react-indexed-db';
 import { filterTheTrade } from '@src/utils/util';
 
 type RecordType = {
-  id?: number;
   systemId?: string;
   systemName?: string;
   business?: string;
@@ -16,9 +15,9 @@ type RecordType = {
   editMen?: string;
   editedAt?: string | number;
   safetyTrade?: string;
+  theBusinessId?:string;
 };
 type Business = {
-  id?: number;
   businessId?: string;
   businessName?: string;
   part?: string;
@@ -31,7 +30,6 @@ type Business = {
   safetyTrade?: string;
 };
 type GapType = {
-  id?: number;
   gapId?: string;
   propertyOrSystem?: string;
   business?: string;
@@ -39,11 +37,12 @@ type GapType = {
   part?: string;
   categorys?: string;
   theType?: string;
-  editMen?: string;
+  addMen?: string;
   editedAt?: string | number;
   actType?: string;
   theBug?: string;
   safetyTrade?: string;
+  theBusinessId?:string;
 };
 
 const systemOption = [
@@ -60,9 +59,47 @@ export default function AddModal(props) {
   const [theBusiness, setTheBusiness] = useState('');
   const [businessK, setBusinessK] = useState('');
   const [thePart, setThePart] = useState('');
+  const [theBusinessId, setTheBusinessId] = useState('');
   const [systemK, setSystemK] = useState('');
   const [businessNameArr, setBusinessNameArr] = useState([]);
 
+  // 修改gap表数据
+  const handleGapTable=(type,data)=>{
+    const { add, update } = useIndexedDB(DBTableName.gap);
+    let request:GapType={
+      gapId:data.systemId,
+      propertyOrSystem:data.systemName,
+      business:data.business,
+      businessKinds:data.businessKinds,
+      part:data.part,
+      categorys:'system',
+      theType:data.systemKinds,
+      addMen:data.addMen,
+      editedAt:data.createdAt,
+      actType:'',
+      theBug:'',
+      safetyTrade:data.safetyTrade,
+      theBusinessId:data.theBusinessId
+    }
+    if(type === 'add'){
+      add<GapType>(request)
+      .then(() => {
+        message.success({ content: '成功' });
+      })
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
+  }else if(type === 'update'){
+    request.editedAt = data.editedAt
+    update<GapType>(request)
+    .then(() => {
+      message.success({ content: '成功' });
+    })
+    .catch(err => {
+      message.error({ content: `失败${err}` });
+    });
+  }   
+  }
   // 拉取数据
   const fetchList = () => {
     getAll()
@@ -103,6 +140,7 @@ export default function AddModal(props) {
         if (item.businessName === v) {
           setBusinessK(item.businessKinds);
           setThePart(item.part);
+          setTheBusinessId(item.businessId);
         }
       });
     }
@@ -116,6 +154,7 @@ export default function AddModal(props) {
     setBusinessK('');
     setSystemK('');
     setThePart('');
+    setTheBusinessId('')
   };
   const close = () => {
     console.log(1111111);
@@ -163,11 +202,11 @@ export default function AddModal(props) {
         systemKinds: systemK.trim(),
         editMen: 'shanehwang',
         editedAt: +new Date(),
+        theBusinessId:theBusinessId,
       };
       update<RecordType>(request)
         .then(() => {
-          message.success({ content: '成功' });
-
+          handleGapTable('update',request);
           props.close();
           props.save();
           init();
@@ -186,10 +225,11 @@ export default function AddModal(props) {
         addMen: 'shanehwang',
         createdAt: +new Date(),
         safetyTrade: props.trade,
+        theBusinessId:theBusinessId,
       };
       add<RecordType>(request)
         .then(() => {
-          message.success({ content: '成功' });
+          handleGapTable('add',request);
           props.close();
           props.save();
           init();
@@ -206,6 +246,7 @@ export default function AddModal(props) {
       setBusinessK(props.theData.businessKinds);
       setSystemK(props.theData.systemKinds);
       setThePart(props.theData.part);
+      setTheBusinessId(props.theData.theBusinessId);
     }
   }, [props.theData]);
 

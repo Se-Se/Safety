@@ -143,7 +143,7 @@ const DataPage: React.FC = () => {
   const handleDelete = (): void => {
     if (checkItem.length) {
       checkItem.map((item, index) => {
-        deleteRecord(Number(item))
+        deleteRecord(item)
           .then(() => {
             if (index === checkItem.length - 1) {
               message.success({ content: '成功' });

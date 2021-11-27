@@ -11,7 +11,6 @@ import { filterTheTrade } from '@src/utils/util';
 const { Body, Content } = Layout;
 
 type RecordType = {
-  id?: number;
   businessId?: string;
   businessName?: string;
   part?: string;
@@ -138,7 +137,7 @@ const BusinessPage: React.FC = () => {
     console.log(333, checkItem);
     if (checkItem.length) {
       checkItem.map((item, index) => {
-        deleteRecord(Number(item))
+        deleteRecord(item)
           .then(() => {
             if (index === checkItem.length - 1) {
               message.success({ content: '成功' });
