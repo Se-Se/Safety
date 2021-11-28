@@ -13,7 +13,7 @@ export const DBTableName = {
   scenes: 'scenes',
 };
 
-export const DBConfig = {
+export const DBConfig: any = {
   name: DBName,
   version: DBVersion,
   // 这里定义表表结构
