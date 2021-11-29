@@ -1,5 +1,5 @@
 import { DBTableName } from '@src/services';
-import { Button, Cascader, Col, Input, message, Modal, Row, Select } from '@tencent/tea-component';
+import { Button, Col, Input, message, Modal, Row, Select, Text } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import { filterTheTrade } from '@src/utils/util';
@@ -115,15 +115,15 @@ export default function AddModal(props) {
   // 检查系统名称是否已存在
   const checkSave = () => {
     if (theName.trim() === '') {
-      message.success({ content: '请输入分区名称' });
+      message.warning({ content: '请输入分区名称' });
       return false;
     }
     if (belongSelect.trim() === '') {
-      message.success({ content: '请选择包含系统' });
+      message.warning({ content: '请选择包含系统' });
       return false;
     }
     if (props.comName === 'frame' && propertyName.trim() === '') {
-      message.success({ content: '包含网络资产' });
+      message.warning({ content: '包含网络资产' });
       return false;
     }
 
@@ -137,7 +137,7 @@ export default function AddModal(props) {
         arr.push(item[attr]);
       });
       if (arr.indexOf(theName.trim()) > -1) {
-        message.error({ content: mess });
+        message.warning({ content: mess });
         return false;
       }
     }
@@ -204,8 +204,10 @@ export default function AddModal(props) {
     return (
       <>
         <Row>
-          <Col span={1}></Col>
-          <Col span={6}>分区名称</Col>
+          <Col span={2}></Col>
+          <Col span={5}>
+            <Text theme="label">分区名称 </Text>
+          </Col>
           <Col span={12}>
             <Input
               size="full"
@@ -217,9 +219,11 @@ export default function AddModal(props) {
             />
           </Col>
         </Row>
-        <Row>
-          <Col span={1}></Col>
-          <Col span={6}>包含系统</Col>
+        <Row style={{ marginTop: '10px' }}>
+          <Col span={2}></Col>
+          <Col span={5}>
+            <Text theme="label">包含系统 </Text>
+          </Col>
           <Col span={12}>
             <Select
               value={belongSelect}
@@ -235,9 +239,11 @@ export default function AddModal(props) {
             />
           </Col>
         </Row>
-        <Row>
-          <Col span={1}></Col>
-          <Col span={6}>包含网络资产</Col>
+        <Row style={{ marginTop: '10px' }}>
+          <Col span={2}></Col>
+          <Col span={5}>
+            <Text theme="label">包含网络资产 </Text>
+          </Col>
           <Col span={12}>
             <Select
               value={propertyName}
@@ -259,7 +265,7 @@ export default function AddModal(props) {
 
   return (
     <>
-      <Modal maskClosable visible={props.visible} className="main-modal" disableCloseIcon={true} onClose={close}>
+      <Modal maskClosable visible={props.visible} size="m" disableCloseIcon={true} onClose={close}>
         <Modal.Body>{templageFn()}</Modal.Body>
         <Modal.Footer>
           <Button type="primary" onClick={handleSave}>

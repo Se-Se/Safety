@@ -1,7 +1,7 @@
 import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Col, Input, Layout, message, Select, SearchBox } from '@tencent/tea-component';
+import { Card, Layout, message, Select, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import AddModal from './components/addModal';
@@ -56,7 +56,9 @@ const GapPage: React.FC = () => {
         setDataList([...arr]);
         setAllList([...arr]);
       })
-      .catch(() => {});
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
   };
 
   // 首次打开页面加载 第二个参数需要是空数组保证只加载一次
@@ -66,7 +68,6 @@ const GapPage: React.FC = () => {
 
   const handleModalClose = () => {
     setShowModal(false);
-    // setTradeData(null);
   };
 
   const handleSave = () => {
@@ -156,10 +157,8 @@ const GapPage: React.FC = () => {
         <SearchBox
           value={inputOne}
           className="margin-r-30"
-          onChange={(value, context) => {
+          onChange={value => {
             handleInputChange(value, 'inputOne');
-
-            console.log(value, context, 1111111111);
           }}
           placeholder="请输入系统/资产名称"
         />
@@ -167,9 +166,8 @@ const GapPage: React.FC = () => {
         <SearchBox
           value={inputTwo}
           className="margin-r-30"
-          onChange={(value, context) => {
+          onChange={value => {
             handleInputChange(value, 'inputTwo');
-            console.log(value, context);
           }}
           placeholder="请输入所属部门"
         />

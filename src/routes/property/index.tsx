@@ -1,7 +1,7 @@
 import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Cascader, Col, Input, Layout, message, SearchBox } from '@tencent/tea-component';
+import { Button, Card, Cascader, Layout, message, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import AddModal from './components/addModal';
@@ -81,7 +81,7 @@ const systemKOptions = [
 const PropertyPage: React.FC = () => {
   const [dataList, setDataList] = useState<PropertyType[]>();
   const [allList, setAllList] = useState<PropertyType[]>();
-  const {  getAll,  deleteRecord } = useIndexedDB(DBTableName.property);
+  const { getAll, deleteRecord } = useIndexedDB(DBTableName.property);
   const val = cookie.load('safetyTrade');
   const [trade, setTrade] = useState(val);
 
@@ -94,17 +94,15 @@ const PropertyPage: React.FC = () => {
   const [checkItem, setCheckItem] = useState([]);
   const [headerSelect, setHeaderSelect] = useState('all');
 
-
-    // 修改gap表数据
-    const handleGapTable=(id)=>{
-      const {deleteRecord } = useIndexedDB(DBTableName.gap);
-      deleteRecord(id)
-      .then(() => {
-      })
+  // 修改gap表数据
+  const handleGapTable = id => {
+    const { deleteRecord } = useIndexedDB(DBTableName.gap);
+    deleteRecord(id)
+      .then(() => {})
       .catch(err => {
         message.error({ content: `失败${err}` });
       });
-    }
+  };
   // 拉取数据
   const fetchList = () => {
     getAll()
@@ -220,7 +218,7 @@ const PropertyPage: React.FC = () => {
       checkItem.map((item, index) => {
         deleteRecord(item)
           .then(() => {
-            handleGapTable(item)
+            handleGapTable(item);
             if (index === checkItem.length - 1) {
               message.success({ content: '成功' });
               fetchList();
@@ -235,6 +233,7 @@ const PropertyPage: React.FC = () => {
 
   const propsConfig = {
     list: dataList,
+    recordKey: 'propertyId',
     columns: [
       'propertyId',
       'propertyName',

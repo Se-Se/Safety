@@ -1,8 +1,7 @@
 import { DBTableName } from '@src/services';
-import { Button, Col, Input, message, Modal, Row } from '@tencent/tea-component';
+import { Button, Col, Input, message, Modal, Row, Text } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
-import { filterTheTrade } from '@src/utils/util';
 const { TextArea } = Input;
 
 type GapType = {
@@ -61,11 +60,11 @@ export default function AddModal(props) {
 
   const handleSave = () => {
     if (theActType.trim() === '') {
-      message.success({ content: '请输入攻击手法' });
+      message.warning({ content: '请输入攻击手法' });
       return;
     }
     if (theTheBug.trim() === '') {
-      message.success({ content: '请输入漏洞' });
+      message.warning({ content: '请输入漏洞' });
       return;
     }
 
@@ -90,7 +89,7 @@ export default function AddModal(props) {
   };
   useEffect(() => {
     if (props.theData && props.isEdit) {
-      setTheName(props.theData.actType);
+      setTheName(props.theData.propertyOrSystem);
       setTheActType(props.theData.actType);
       setTheTheBug(props.theData.theBug);
     }
@@ -98,12 +97,12 @@ export default function AddModal(props) {
 
   return (
     <>
-      <Modal maskClosable visible={props.visible} className="main-modal " disableCloseIcon={true} onClose={close}>
+      <Modal maskClosable visible={props.visible} size="l" disableCloseIcon={true} onClose={close}>
         <Modal.Body>
           <Row>
-            <Col span={1}></Col>
-            <Col span={6} style={{ verticalAlign: 'middle' }}>
-              系统名称 ：
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">资产/系统名称：</Text>
             </Col>
             <Col span={12}>
               <Input
@@ -113,18 +112,17 @@ export default function AddModal(props) {
                 onChange={value => {
                   setTheName(value);
                 }}
-                placeholder="请输入系统名称"
+                placeholder="系统/资产名称"
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={1}></Col>
-            <Col span={6} style={{ verticalAlign: 'middle' }}>
-              攻击手法 ：
+          <Row style={{ marginTop: '10px' }}>
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">攻击手法 </Text>
             </Col>
             <Col span={12}>
               <TextArea
-                showCount
                 size="full"
                 value={theActType}
                 onChange={value => {
@@ -134,12 +132,13 @@ export default function AddModal(props) {
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={1}></Col>
-            <Col span={6}>漏洞 ：</Col>
+          <Row style={{ marginTop: '10px' }}>
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">漏洞 </Text>
+            </Col>
             <Col span={12}>
               <TextArea
-                showCount
                 size="full"
                 value={theTheBug}
                 onChange={value => {

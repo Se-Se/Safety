@@ -1,6 +1,6 @@
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Input, Layout, message, Select, Row, Col, SearchBox } from '@tencent/tea-component';
+import { Button, Card, Layout, message, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import BreadcrumbPage from '@src/components/crumb';

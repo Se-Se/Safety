@@ -1,7 +1,7 @@
 import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Col, Input, Layout, message, Row, Select, SearchBox } from '@tencent/tea-component';
+import { Button, Card, Layout, message, Select, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import AddModal from './components/addModal';
@@ -174,10 +174,6 @@ const AppPage: React.FC = () => {
       });
     }
   };
-  const handleShowPic = (data): void => {
-    console.log(111, data);
-    setModalData(data);
-  };
 
   const propsConfig = {
     list: dataList,
@@ -267,7 +263,6 @@ const AppPage: React.FC = () => {
               <TableCommon
                 {...propsConfig}
                 systemKOptions={systemKOptions}
-                showPic={handleShowPic}
                 onEdit={handleEdit}
                 selectItems={handleSelectItems}
               ></TableCommon>

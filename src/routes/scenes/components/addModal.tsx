@@ -1,5 +1,5 @@
 import { DBTableName } from '@src/services';
-import { Button, Col, Input, message, Modal, Row } from '@tencent/tea-component';
+import { Button, Col, Input, message, Modal, Row, Text } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 const { TextArea } = Input;
@@ -46,19 +46,19 @@ export default function AddModal(props) {
   // 检查系统名称是否已存在
   const checkSave = () => {
     if (theName.trim() === '') {
-      message.success({ content: '请输入攻击场景名称' });
+      message.warning({ content: '请输入攻击场景名称' });
       return false;
     }
     if (theStrategy.trim() === '') {
-      message.success({ content: '请输入行动策略' });
+      message.warning({ content: '请输入行动策略' });
       return false;
     }
     if (theAttackObject.trim() === '') {
-      message.success({ content: '请输入攻击目标' });
+      message.warning({ content: '请输入攻击目标' });
       return false;
     }
     if (theLoseEffect.trim() === '') {
-      message.success({ content: '请输入损失影响' });
+      message.warning({ content: '请输入损失影响' });
       return false;
     }
 
@@ -72,7 +72,7 @@ export default function AddModal(props) {
         arr.push(item[attr]);
       });
       if (arr.indexOf(theName.trim()) > -1) {
-        message.error({ content: mess });
+        message.warning({ content: mess });
         return false;
       }
     }
@@ -138,9 +138,11 @@ export default function AddModal(props) {
   const templageFn = () => {
     return (
       <>
-        <Row>
-          <Col span={1}></Col>
-          <Col span={6}>攻击场景名称</Col>
+        <Row verticalAlign="middle">
+          <Col span={3}></Col>
+          <Col span={4}>
+            <Text theme="label">攻击场景名称</Text>
+          </Col>
           <Col span={12}>
             <Input
               size="full"
@@ -152,12 +154,13 @@ export default function AddModal(props) {
             />
           </Col>
         </Row>
-        <Row>
-          <Col span={1}></Col>
-          <Col span={6}>行动策略</Col>
+        <Row style={{ marginTop: '10px' }}>
+          <Col span={3}></Col>
+          <Col span={4}>
+            <Text theme="label">行动策略</Text>
+          </Col>
           <Col span={12}>
             <TextArea
-              showCount
               size="full"
               value={theStrategy}
               onChange={value => {
@@ -167,12 +170,13 @@ export default function AddModal(props) {
             />
           </Col>
         </Row>
-        <Row>
-          <Col span={1}></Col>
-          <Col span={6}>攻击目标</Col>
+        <Row style={{ marginTop: '10px' }}>
+          <Col span={3}></Col>
+          <Col span={4}>
+            <Text theme="label">攻击目标</Text>
+          </Col>
           <Col span={12}>
             <TextArea
-              showCount
               size="full"
               value={theAttackObject}
               onChange={value => {
@@ -182,12 +186,13 @@ export default function AddModal(props) {
             />
           </Col>
         </Row>
-        <Row>
-          <Col span={1}></Col>
-          <Col span={6}>损失影响</Col>
+        <Row style={{ marginTop: '10px' }}>
+          <Col span={3}></Col>
+          <Col span={4}>
+            <Text theme="label">损失影响</Text>
+          </Col>
           <Col span={12}>
             <TextArea
-              showCount
               size="full"
               value={theLoseEffect}
               onChange={value => {
@@ -203,7 +208,7 @@ export default function AddModal(props) {
 
   return (
     <>
-      <Modal maskClosable visible={props.visible} className="main-modal" disableCloseIcon={true} onClose={close}>
+      <Modal maskClosable visible={props.visible} size="l" disableCloseIcon={true} onClose={close}>
         <Modal.Body>{templageFn()}</Modal.Body>
         <Modal.Footer>
           <Button type="primary" onClick={handleSave}>

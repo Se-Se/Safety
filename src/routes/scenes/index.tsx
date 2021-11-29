@@ -126,6 +126,7 @@ const ScenesPage: React.FC = () => {
   // 删除button
   const handleDelete = (): void => {
     if (checkItem.length) {
+      console.log(checkItem, 111);
       checkItem.map((item, index) => {
         deleteRecord(item)
           .then(() => {
@@ -145,6 +146,7 @@ const ScenesPage: React.FC = () => {
   };
   const propsConfig = {
     list: dataList,
+    recordKey: 'scenesId',
     columns: ['scenesId', 'sceneName', 'strategy', 'attackObject', 'loseEffect', 'show', 'action'],
     left: (
       <>

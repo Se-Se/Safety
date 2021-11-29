@@ -1,5 +1,5 @@
 import { DBTableName } from '@src/services';
-import { Button, Col, Input, message, Modal, Row, Select } from '@tencent/tea-component';
+import { Button, Col, Input, message, Modal, Row, Select, Text } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import { filterTheTrade } from '@src/utils/util';
@@ -170,7 +170,7 @@ export default function AddModal(props) {
         arr.push(item.systemName);
       });
       if (arr.indexOf(systemN.trim()) > -1) {
-        message.error({ content: '系统名称已存在' });
+        message.warning({ content: '系统名称已存在' });
         return false;
       }
     }
@@ -179,15 +179,15 @@ export default function AddModal(props) {
 
   const handleSave = () => {
     if (systemN.trim() === '') {
-      message.success({ content: '请输入业务名称' });
+      message.warning({ content: '请输入业务名称' });
       return;
     }
     if (theBusiness.trim() === '') {
-      message.success({ content: '请选择所属部门' });
+      message.warning({ content: '请选择所属部门' });
       return;
     }
     if (systemK.trim() === '') {
-      message.success({ content: '请选择系统类型' });
+      message.warning({ content: '请选择系统类型' });
       return;
     }
     if (!checkSave()) {
@@ -252,11 +252,14 @@ export default function AddModal(props) {
 
   return (
     <>
-      <Modal maskClosable visible={props.visible} className="main-modal" disableCloseIcon={true} onClose={close}>
+      <Modal maskClosable visible={props.visible} size="m" disableCloseIcon={true} onClose={close}>
         <Modal.Body>
           <Row>
-            <Col span={1}></Col>
-            <Col span={6}>系统名称</Col>
+            <Col span={3}></Col>
+            <Col span={4}>
+              {' '}
+              <Text theme="label">系统名称 </Text>
+            </Col>
             <Col span={12}>
               <Input
                 size="full"
@@ -268,9 +271,11 @@ export default function AddModal(props) {
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={1}></Col>
-            <Col span={6}>所属业务</Col>
+          <Row style={{ marginTop: '10px' }}>
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">所属业务 </Text>
+            </Col>
             <Col span={12}>
               <Select
                 value={theBusiness}
@@ -286,9 +291,11 @@ export default function AddModal(props) {
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={1}></Col>
-            <Col span={6}>系统类型</Col>
+          <Row style={{ marginTop: '10px' }}>
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">系统类型 </Text>
+            </Col>
             <Col span={12}>
               <Select
                 value={systemK}

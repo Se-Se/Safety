@@ -1,5 +1,5 @@
 import { DBTableName } from '@src/services';
-import { Button, Col, Input, message, Modal, Row } from '@tencent/tea-component';
+import { Button, Col, Input, message, Modal, Row, Text } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 
@@ -39,7 +39,7 @@ export default function AddModal(props) {
         arr.push(item.businessName);
       });
       if (arr.indexOf(businessN.trim()) > -1) {
-        message.error({ content: '业务名称已存在' });
+        message.warning({ content: '业务名称已存在' });
         return false;
       }
     }
@@ -47,15 +47,15 @@ export default function AddModal(props) {
   };
   const handleSave = () => {
     if (businessN.trim() === '') {
-      message.success({ content: '请输入业务名称' });
+      message.warning({ content: '请输入业务名称' });
       return;
     }
     if (thePart.trim() === '') {
-      message.success({ content: '请输入所属部门' });
+      message.warning({ content: '请输入所属部门' });
       return;
     }
     if (businessK.trim() === '') {
-      message.success({ content: '请输入业务大类' });
+      message.warning({ content: '请输入业务大类' });
       return;
     }
     if (!checkSave()) {
@@ -110,44 +110,50 @@ export default function AddModal(props) {
 
   return (
     <>
-      <Modal maskClosable visible={props.visible} className="main-modal" disableCloseIcon={true} onClose={close}>
+      <Modal maskClosable visible={props.visible} size="m" disableCloseIcon={true} onClose={close}>
         <Modal.Body>
           <Row>
-            <Col span={1}></Col>
-            <Col span={6}>业务名称</Col>
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">业务名称 </Text>
+            </Col>
             <Col span={12}>
               <Input
                 size="full"
                 value={businessN}
-                onChange={(value, context) => {
+                onChange={value => {
                   setBusinessN(value);
                 }}
                 placeholder="请输入业务名称"
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={1}></Col>
-            <Col span={6}>所属部门</Col>
+          <Row style={{ marginTop: '10px' }}>
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">所属部门 </Text>
+            </Col>
             <Col span={12}>
               <Input
                 size="full"
                 value={thePart}
-                onChange={(value, context) => {
+                onChange={value => {
                   setThePart(value);
                 }}
                 placeholder="请输入所属部门"
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={1}></Col>
-            <Col span={6}>业务大类</Col>
+          <Row style={{ marginTop: '10px' }}>
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">业务大类 </Text>
+            </Col>
             <Col span={12}>
               <Input
                 size="full"
                 value={businessK}
-                onChange={(value, context) => {
+                onChange={value => {
                   setBusinessK(value);
                 }}
                 placeholder="请输入业务大类"

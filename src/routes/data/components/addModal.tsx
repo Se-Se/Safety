@@ -1,5 +1,5 @@
 import { DBTableName } from '@src/services';
-import { Button, Col, Input, message, Modal, Row, Select } from '@tencent/tea-component';
+import { Button, Col, Input, message, Modal, Row, Select, Text } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import { useIndexedDB } from 'react-indexed-db';
 import { filterTheTrade } from '@src/utils/util';
@@ -110,7 +110,7 @@ export default function AddModal(props) {
         arr.push(item.dataName);
       });
       if (arr.indexOf(theName.trim()) > -1) {
-        message.error({ content: '数据名称已存在' });
+        message.warning({ content: '数据名称已存在' });
         return false;
       }
     }
@@ -118,11 +118,11 @@ export default function AddModal(props) {
   };
   const handleSave = () => {
     if (theName.trim() === '') {
-      message.success({ content: '请输入数据名称' });
+      message.warning({ content: '请输入数据名称' });
       return;
     }
     if (belongSelect.trim() === '') {
-      message.success({ content: '请选择所属系统' });
+      message.warning({ content: '请选择所属系统' });
       return;
     }
     if (!checkSave()) {
@@ -177,11 +177,13 @@ export default function AddModal(props) {
 
   return (
     <>
-      <Modal maskClosable visible={props.visible} className="main-modal" disableCloseIcon={true} onClose={close}>
+      <Modal maskClosable visible={props.visible} size="m" disableCloseIcon={true} onClose={close}>
         <Modal.Body>
           <Row>
-            <Col span={1}></Col>
-            <Col span={6}>数据名称</Col>
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">数据名称 </Text>
+            </Col>
             <Col span={12}>
               <Input
                 size="full"
@@ -193,9 +195,11 @@ export default function AddModal(props) {
               />
             </Col>
           </Row>
-          <Row>
-            <Col span={1}></Col>
-            <Col span={6}>所属系统</Col>
+          <Row style={{ marginTop: '10px' }}>
+            <Col span={3}></Col>
+            <Col span={4}>
+              <Text theme="label">所属系统 </Text>
+            </Col>
             <Col span={12}>
               <Select
                 value={belongSelect}

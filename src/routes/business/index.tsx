@@ -1,7 +1,7 @@
 import BreadcrumbPage from '@src/components/crumb';
 import TableCommon from '@src/components/tableCommon';
 import { DBTableName } from '@src/services';
-import { Button, Card, Col, Input, Layout, message, Row, SearchBox } from '@tencent/tea-component';
+import { Button, Card, Layout, message, SearchBox } from '@tencent/tea-component';
 import React, { useEffect, useState } from 'react';
 import cookie from 'react-cookies';
 import { useIndexedDB } from 'react-indexed-db';
@@ -134,7 +134,6 @@ const BusinessPage: React.FC = () => {
     setCheckItem(data);
   };
   const handleDelete = (): void => {
-    console.log(333, checkItem);
     if (checkItem.length) {
       checkItem.map((item, index) => {
         deleteRecord(item)
@@ -151,7 +150,6 @@ const BusinessPage: React.FC = () => {
     }
   };
   const handleShowPic = (data): void => {
-    console.log(111, data);
     setModalData(data);
   };
 
