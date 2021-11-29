@@ -74,7 +74,6 @@ const FramePage: React.FC = () => {
   };
   // 点击编辑按钮
   const handleEdit = data => {
-    console.log(data);
     setModalData({ ...data });
     setIsEdit(true);
     setShowModal(true);

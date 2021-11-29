@@ -29,7 +29,6 @@ const MainPage: React.FC = () => {
   const fetchList = () => {
     getAll()
       .then(data => {
-        console.log(data, 123);
         setDataList(data);
       })
       .catch(() => {});
@@ -40,7 +39,6 @@ const MainPage: React.FC = () => {
   }, []);
 
   const onAdd = () => {
-    console.log(123);
     setIsEdit(false);
     setShowModal(true);
   };

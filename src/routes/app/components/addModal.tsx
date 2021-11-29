@@ -129,11 +129,9 @@ export default function AddModal(props) {
     });
 
     setBusinessNameArr([...theNameArr]);
-    console.log(7777777777777);
   };
   // select change 事件
   const handleSelectChange = (v, attr) => {
-    console.log(v);
     if (attr === 'theBusiness') {
       setTheBusiness(v);
       businessData.map(item => {
@@ -157,7 +155,6 @@ export default function AddModal(props) {
     setTheBusinessId('');
   };
   const close = () => {
-    console.log(1111111);
     props.close();
     init();
   };

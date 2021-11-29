@@ -75,7 +75,6 @@ const GapPage: React.FC = () => {
   };
 
   const handleEdit = data => {
-    console.log(data, 123321);
     setModalData({ ...data });
     setIsEdit(true);
     setShowModal(true);

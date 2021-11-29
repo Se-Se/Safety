@@ -28,7 +28,6 @@ export default function AddModal(props) {
     setBusinessK('');
   };
   const close = () => {
-    console.log(1111111);
     props.close();
     init();
   };

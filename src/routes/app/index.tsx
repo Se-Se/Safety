@@ -61,9 +61,7 @@ const AppPage: React.FC = () => {
   const fetchList = () => {
     getAll()
       .then(data => {
-        console.log(data, 123);
         const arr = filterTheTrade(data, 'safetyTrade', trade);
-        console.log(arr, 55555555);
         setDataList([...arr]);
         setAllList([...arr]);
       })
@@ -91,7 +89,6 @@ const AppPage: React.FC = () => {
   };
   // 点击编辑按钮
   const handleEdit = data => {
-    console.log(data);
     setModalData({ ...data });
     setIsEdit(true);
     setShowModal(true);
@@ -196,10 +193,8 @@ const AppPage: React.FC = () => {
           size="m"
           value={inputOne}
           className="margin-r-30"
-          onChange={(value, context) => {
+          onChange={value => {
             handleInputChange(value, 'inputOne');
-
-            console.log(value, context, 1111111111);
           }}
           placeholder="请输入系统名称"
         />
@@ -208,9 +203,8 @@ const AppPage: React.FC = () => {
           size="m"
           value={inputTwo}
           className="margin-r-30"
-          onChange={(value, context) => {
+          onChange={value => {
             handleInputChange(value, 'inputTwo');
-            console.log(value, context);
           }}
           placeholder="请输入所属业务"
         />

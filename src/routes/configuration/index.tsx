@@ -63,7 +63,6 @@ export default class DragFromOutsideLayout extends React.Component {
 
   onDrop = (layout, layoutItem, _event) => {
     alert(`Dropped element props:\n${JSON.stringify(layoutItem, ['x', 'y', 'w', 'h'], 2)}`);
-    console.log(layout);
     layoutItem.h = 7;
     layoutItem.w = 4;
     layout.map(item => {

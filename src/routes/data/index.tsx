@@ -49,9 +49,7 @@ const DataPage: React.FC = () => {
   const fetchList = () => {
     getAll()
       .then(data => {
-        console.log(data, 123);
         const arr = filterTheTrade(data, 'safetyTrade', trade);
-        console.log(arr, 55555555);
         setDataList([...arr]);
         setAllList([...arr]);
       })
@@ -79,7 +77,6 @@ const DataPage: React.FC = () => {
   };
   // 点击编辑按钮
   const handleEdit = data => {
-    console.log(data);
     setModalData({ ...data });
     setIsEdit(true);
     setShowModal(true);

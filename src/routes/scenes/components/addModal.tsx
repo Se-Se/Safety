@@ -34,7 +34,6 @@ export default function AddModal(props) {
   };
 
   const handleTextAreaChange = (v, attr) => {
-    console.log(v, 111);
     if (attr === 'theStrategy') {
       setTheStrategy(v);
     } else if (attr === 'theAttackObject') {

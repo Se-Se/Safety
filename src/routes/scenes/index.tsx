@@ -83,7 +83,6 @@ const ScenesPage: React.FC = () => {
   const fetchList = () => {
     getAll()
       .then(data => {
-        console.log(data, 123);
         const arr = filterTheTrade(data, 'safetyTrade', trade);
         setDataList([...arr]);
       })
@@ -112,7 +111,6 @@ const ScenesPage: React.FC = () => {
 
   // 点击编辑按钮
   const handleEdit = data => {
-    console.log(data);
     setModalData({ ...data });
     setIsEdit(true);
     setShowModal(true);
@@ -126,7 +124,6 @@ const ScenesPage: React.FC = () => {
   // 删除button
   const handleDelete = (): void => {
     if (checkItem.length) {
-      console.log(checkItem, 111);
       checkItem.map((item, index) => {
         deleteRecord(item)
           .then(() => {
@@ -142,7 +139,7 @@ const ScenesPage: React.FC = () => {
     }
   };
   const handleShow = data => {
-    console.log(data, 8888888888888885);
+    console.log('data', data);
   };
   const propsConfig = {
     list: dataList,

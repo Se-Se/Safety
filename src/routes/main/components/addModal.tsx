@@ -25,7 +25,6 @@ export default function AddModal(props) {
     setTitle('');
   };
   const close = () => {
-    console.log(1111111);
     props.close();
     init();
   };

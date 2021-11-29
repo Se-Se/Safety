@@ -84,7 +84,6 @@ export default function AddModal(props) {
 
   // select change 事件
   const handleSelectChange = (v, attr) => {
-    console.log(v);
     if (attr === 'belongSelect') {
       if (v) {
         setBelongSelect(v);

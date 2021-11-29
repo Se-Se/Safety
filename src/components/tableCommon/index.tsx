@@ -210,7 +210,7 @@ const TableCommon: React.FC<any> = props => {
         }
       });
     });
-    console.log(999, arr);
+
     arr.map(item => {
       if (item.key === 'action') {
         item.render = (record: any, key: any, index: any) => (
@@ -219,7 +219,6 @@ const TableCommon: React.FC<any> = props => {
               type="link"
               onClick={ev => {
                 ev.stopPropagation();
-                console.log(props, 666);
                 props.onEdit(record);
               }}
             >

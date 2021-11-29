@@ -77,12 +77,10 @@ export default function AddModal(props) {
     });
 
     setBelongOption([...options]);
-    console.log(7777777777777);
   };
 
   // select change 事件
   const handleSelectChange = (v, attr) => {
-    console.log(v);
     if (attr === 'belongSelect') {
       setBelongSelect(v);
       tableData.map(item => {
@@ -98,7 +96,6 @@ export default function AddModal(props) {
     setBelongField('');
   };
   const close = () => {
-    console.log(1111111);
     props.close();
     init();
   };

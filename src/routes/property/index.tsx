@@ -107,9 +107,7 @@ const PropertyPage: React.FC = () => {
   const fetchList = () => {
     getAll()
       .then(data => {
-        console.log(data, 123);
         const arr = filterTheTrade(data, 'safetyTrade', trade);
-        console.log(arr, 55555555);
         setDataList([...arr]);
         setAllList([...arr]);
       })
@@ -137,7 +135,6 @@ const PropertyPage: React.FC = () => {
   };
   // 点击编辑按钮
   const handleEdit = data => {
-    console.log(data);
     setModalData({ ...data });
     setIsEdit(true);
     setShowModal(true);
@@ -198,7 +195,6 @@ const PropertyPage: React.FC = () => {
   // 资产类型选择
   const handleSelectChange = (v): void => {
     let str = v.join('/');
-    console.log(str);
     setHeaderSelect(str);
   };
 

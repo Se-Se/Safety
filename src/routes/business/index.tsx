@@ -44,9 +44,7 @@ const BusinessPage: React.FC = () => {
   const fetchList = () => {
     getAll()
       .then(data => {
-        console.log(data, 123);
         const arr = filterTheTrade(data, 'safetyTrade', trade);
-        console.log(arr, 55555555);
         setDataList([...arr]);
         setAllList([...arr]);
       })
@@ -74,7 +72,6 @@ const BusinessPage: React.FC = () => {
   };
   // 点击编辑按钮
   const handleEdit = data => {
-    console.log(data);
     setModalData({ ...data });
     setIsEdit(true);
     setShowModal(true);
@@ -127,7 +124,6 @@ const BusinessPage: React.FC = () => {
   useEffect(() => {
     let arr = filterDataList(allList);
     setDataList([...arr]);
-    console.log(12332112321, businessN, selectPart);
   }, [businessN, selectPart]);
   //表格checkbox被选中
   const handleSelectItems = data => {

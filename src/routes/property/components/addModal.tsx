@@ -133,12 +133,10 @@ export default function AddModal(props) {
     });
 
     setBelongOption([...theNameArr]);
-    console.log(7777777777777);
   };
 
   // select change 事件
   const handleSelectChange = (v, attr) => {
-    console.log(v);
     if (attr === 'belongSelect') {
       setBelongSelect(v);
       tableData.map(item => {
