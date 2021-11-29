@@ -22,7 +22,7 @@ type RecordType = {
   editMen?: string;
   editedAt?: string | number;
   safetyTrade?: string;
-  theBusinessId?:string;
+  theBusinessId?: string;
 };
 const crumb = [
   { name: '银行', link: '/main' },
@@ -30,8 +30,8 @@ const crumb = [
 ];
 const systemKOptions = [
   { value: 'all', text: '所以类型' },
-  { value: 'otherSys', text: '第三方系统' },
-  { value: 'ownSys', text: '内部系统' },
+  { value: '第三方系统', text: '第三方系统' },
+  { value: '内部系统', text: '内部系统' },
 ];
 const AppPage: React.FC = () => {
   const [dataList, setDataList] = useState<RecordType[]>();
@@ -49,15 +49,14 @@ const AppPage: React.FC = () => {
   const [headerSelect, setHeaderSelect] = useState('');
 
   // 修改gap表数据
-  const handleGapTable=(id)=>{
-    const {deleteRecord } = useIndexedDB(DBTableName.gap);
+  const handleGapTable = id => {
+    const { deleteRecord } = useIndexedDB(DBTableName.gap);
     deleteRecord(id)
-    .then(() => {
-    })
-    .catch(err => {
-      message.error({ content: `失败${err}` });
-    });
-  }
+      .then(() => {})
+      .catch(err => {
+        message.error({ content: `失败${err}` });
+      });
+  };
   // 拉取数据
   const fetchList = () => {
     getAll()
@@ -182,6 +181,7 @@ const AppPage: React.FC = () => {
 
   const propsConfig = {
     list: dataList,
+    recordKey: 'systemId',
     columns: [
       'systemId',
       'systemName',

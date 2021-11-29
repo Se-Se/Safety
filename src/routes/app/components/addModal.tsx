@@ -15,7 +15,7 @@ type RecordType = {
   editMen?: string;
   editedAt?: string | number;
   safetyTrade?: string;
-  theBusinessId?:string;
+  theBusinessId?: string;
 };
 type Business = {
   businessId?: string;
@@ -42,12 +42,12 @@ type GapType = {
   actType?: string;
   theBug?: string;
   safetyTrade?: string;
-  theBusinessId?:string;
+  theBusinessId?: string;
 };
 
 const systemOption = [
-  { value: 'otherSys', text: '第三方系统' },
-  { value: 'ownSys', text: '内部系统' },
+  { value: '第三方系统', text: '第三方系统' },
+  { value: '内部系统', text: '内部系统' },
 ];
 
 export default function AddModal(props) {
@@ -64,42 +64,42 @@ export default function AddModal(props) {
   const [businessNameArr, setBusinessNameArr] = useState([]);
 
   // 修改gap表数据
-  const handleGapTable=(type,data)=>{
+  const handleGapTable = (type, data) => {
     const { add, update } = useIndexedDB(DBTableName.gap);
-    let request:GapType={
-      gapId:data.systemId,
-      propertyOrSystem:data.systemName,
-      business:data.business,
-      businessKinds:data.businessKinds,
-      part:data.part,
-      categorys:'system',
-      theType:data.systemKinds,
-      addMen:data.addMen,
-      editedAt:data.createdAt,
-      actType:'',
-      theBug:'',
-      safetyTrade:data.safetyTrade,
-      theBusinessId:data.theBusinessId
-    }
-    if(type === 'add'){
+    let request: GapType = {
+      gapId: data.systemId,
+      propertyOrSystem: data.systemName,
+      business: data.business,
+      businessKinds: data.businessKinds,
+      part: data.part,
+      categorys: 'system',
+      theType: data.systemKinds,
+      addMen: data.addMen,
+      editedAt: data.createdAt,
+      actType: '',
+      theBug: '',
+      safetyTrade: data.safetyTrade,
+      theBusinessId: data.theBusinessId,
+    };
+    if (type === 'add') {
       add<GapType>(request)
-      .then(() => {
-        message.success({ content: '成功' });
-      })
-      .catch(err => {
-        message.error({ content: `失败${err}` });
-      });
-  }else if(type === 'update'){
-    request.editedAt = data.editedAt
-    update<GapType>(request)
-    .then(() => {
-      message.success({ content: '成功' });
-    })
-    .catch(err => {
-      message.error({ content: `失败${err}` });
-    });
-  }   
-  }
+        .then(() => {
+          message.success({ content: '成功' });
+        })
+        .catch(err => {
+          message.error({ content: `失败${err}` });
+        });
+    } else if (type === 'update') {
+      request.editedAt = data.editedAt;
+      update<GapType>(request)
+        .then(() => {
+          message.success({ content: '成功' });
+        })
+        .catch(err => {
+          message.error({ content: `失败${err}` });
+        });
+    }
+  };
   // 拉取数据
   const fetchList = () => {
     getAll()
@@ -154,7 +154,7 @@ export default function AddModal(props) {
     setBusinessK('');
     setSystemK('');
     setThePart('');
-    setTheBusinessId('')
+    setTheBusinessId('');
   };
   const close = () => {
     console.log(1111111);
@@ -202,11 +202,11 @@ export default function AddModal(props) {
         systemKinds: systemK.trim(),
         editMen: 'shanehwang',
         editedAt: +new Date(),
-        theBusinessId:theBusinessId,
+        theBusinessId: theBusinessId,
       };
       update<RecordType>(request)
         .then(() => {
-          handleGapTable('update',request);
+          handleGapTable('update', request);
           props.close();
           props.save();
           init();
@@ -225,11 +225,11 @@ export default function AddModal(props) {
         addMen: 'shanehwang',
         createdAt: +new Date(),
         safetyTrade: props.trade,
-        theBusinessId:theBusinessId,
+        theBusinessId: theBusinessId,
       };
       add<RecordType>(request)
         .then(() => {
-          handleGapTable('add',request);
+          handleGapTable('add', request);
           props.close();
           props.save();
           init();

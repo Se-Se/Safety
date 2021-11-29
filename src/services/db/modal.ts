@@ -13,7 +13,7 @@ export const DBTableName = {
   scenes: 'scenes',
 };
 
-export const DBConfig = {
+export const DBConfig: any = {
   name: DBName,
   version: DBVersion,
   // 这里定义表表结构
@@ -121,7 +121,7 @@ export const DBConfig = {
     },
     {
       store: DBTableName.recommend,
-      storeConfig: { keyPath: 'id'},
+      storeConfig: { keyPath: 'id' },
       storeSchema: [
         { name: 'name', keypath: 'name', options: { unique: false } },
         { name: 'type', keypath: 'type', options: { unique: false } },
@@ -159,7 +159,6 @@ export const DBConfig = {
         { name: 'theBug', keypath: 'theBug', options: { unique: false } },
         { name: 'safetyTrade', keypath: 'safetyTrade', options: { unique: false } },
         { name: 'theBusinessId', keypath: 'theBusinessId', options: { unique: false } },
-        
       ],
     },
   ],

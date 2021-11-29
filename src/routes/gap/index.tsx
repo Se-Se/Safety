@@ -30,7 +30,7 @@ const crumb = [
   { name: '攻击手法与漏洞', link: '/gap' },
 ];
 const systemOrPropertyOption = [
-  { value: 'all', text: '所以类型' },
+  { value: 'all', text: '所有分类' },
   { value: 'system', text: '系统' },
   { value: 'property', text: '资产' },
 ];
@@ -47,30 +47,6 @@ const GapPage: React.FC = () => {
   const [isEdit, setIsEdit] = useState(false);
   const [modalData, setModalData] = useState(null);
   const [headerSelect, setHeaderSelect] = useState('all');
-
-  const [appData, setAppData] = useState([]);
-  const [propertyData, setPropertyData] = useState([]);
-
-  // 拉取应用系统数据
-  const getAppData = () => {
-    const { getAll } = useIndexedDB(DBTableName.app);
-    getAll()
-      .then(data => {
-        const arr = filterTheTrade(data, 'safetyTrade', trade);
-        setAppData([...arr]);
-      })
-      .catch(() => {});
-  };
-  // 拉取网络资产数据
-  const getPropertyData = () => {
-    const { add, getAll, update, deleteRecord } = useIndexedDB(DBTableName.property);
-    getAll()
-      .then(data => {
-        const arr = filterTheTrade(data, 'safetyTrade', trade);
-        setPropertyData([...arr]);
-      })
-      .catch(() => {});
-  };
 
   // 拉取数据
   const fetchList = () => {
@@ -121,9 +97,9 @@ const GapPage: React.FC = () => {
       return arr;
     }
     let filterArr = [];
-    let inputOneArr = filterItem(arr, 'systemName', inputOne);
-    let inputTwoArr = filterItem(arr, 'business', inputTwo);
-    let headerSelectArr = filterItem(arr, 'systemKinds', headerSelect);
+    let inputOneArr = filterItem(arr, 'propertyOrSystem', inputOne);
+    let inputTwoArr = filterItem(arr, 'part', inputTwo);
+    let headerSelectArr = filterItem(arr, 'categorys', headerSelect);
     arr.map(item => {
       if (inputOneArr.indexOf(item) > -1 && inputTwoArr.indexOf(item) > -1 && headerSelectArr.indexOf(item) > -1) {
         filterArr.push(item);
@@ -159,10 +135,11 @@ const GapPage: React.FC = () => {
 
   const propsConfig = {
     list: dataList,
+    recordKey: 'gapId',
     notSelectable: true,
     columns: [
       'gapId',
-      'propertyAndSystem',
+      'propertyOrSystem',
       'business',
       'businessKinds',
       'part',
@@ -199,7 +176,6 @@ const GapPage: React.FC = () => {
 
         <Select
           size="m"
-          clearable
           matchButtonWidth
           appearance="button"
           value={headerSelect}

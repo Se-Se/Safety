@@ -157,6 +157,7 @@ const BusinessPage: React.FC = () => {
 
   const propsConfig = {
     list: dataList,
+    recordKey: 'businessId',
     columns: [
       'businessId',
       'businessName',

@@ -121,7 +121,7 @@ const TableCommon: React.FC<any> = props => {
         header: '攻击手法与漏洞id',
       },
       {
-        key: 'propertyAndSystem',
+        key: 'propertyOrSystem',
         header: '资产/系统名称',
       },
       {
@@ -267,6 +267,15 @@ const TableCommon: React.FC<any> = props => {
       if (item.key === 'editedAt') {
         item.render = record => formatDate(record.editedAt);
       }
+      if (item.key === 'categorys') {
+        item.render = record => {
+          if (record.categorys === 'property') {
+            return '资产';
+          } else {
+            return '应用系统';
+          }
+        };
+      }
     });
     return arr;
   };
@@ -282,7 +291,7 @@ const TableCommon: React.FC<any> = props => {
       <Table<RecordType>
         verticalTop
         records={props.list || []}
-        recordKey="id"
+        recordKey={props.recordKey}
         bordered
         columns={arr}
         addons={[

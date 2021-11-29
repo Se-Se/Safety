@@ -159,6 +159,7 @@ const DataPage: React.FC = () => {
 
   const propsConfig = {
     list: dataList,
+    recordKey: 'dataId',
     columns: [
       'dataId',
       'dataName',

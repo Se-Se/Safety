@@ -105,6 +105,7 @@ const FramePage: React.FC = () => {
 
   const propsConfig = {
     list: dataList,
+    recordKey: 'areaId',
     columns: ['areaId', 'areaName', 'systemAndProperty', 'addMen', 'createdAt', 'editMen', 'editedAt', 'action'],
     left: (
       <>
